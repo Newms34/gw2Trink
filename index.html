@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>GW2 Trinket Manager</title>
+</head>
+
+<body>
+    <div id="main">
+        <table class="table" v-if='!!allChars'>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Race</th>
+                    <th>Profession</th>
+                    <th v-for='s in slots'>{{s}}</th>
+                    <th>Desired Attrib</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for='ch in allChars' v-bind:class='{"transp":getFinished(ch)}'>
+                    <td>{{ch.name}}</td>
+                    <td>{{ch.gender}}</td>
+                    <td>{{ch.race}}</td>
+                    <td>{{ch.prof}}</td>
+                    <td v-for='ei in ch.equip'>
+                        <div v-if='!!ei.stats && !!ei.stats.statCombo' class='is-fullwidth' v-bind:class="'has-background-'+ei.stats.statCombo.type" v-bind:title='getItemReport(ch.name,ei)'>
+                            <!-- ({{ei.stats.isExotic}}) -->
+                            <div class="">
+                                <span v-if='ei.stats.isExotic' title='Warning: This item is not ascended!'>🠻</span>
+                            </div>
+                            <div class="is-size-7">
+                                {{ei.stats.statCombo.type}} ({{ei.stats.statCombo.name}})
+                            </div>
+                            <div class="">
+                                <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat'>✓</span><span v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat'>X</span>
+                            </div>
+                        </div>
+                        <div v-if="!ei.stats || !ei.stats.statCombo"
+                            title="This trinket could'nt be found! It's probably not my fault." class='is-fullwidth'>
+                            ERROR
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select id="sel" v-model='ch.desiredStat' v-on:change='setDesired'>
+                                    <option disabled value="">Please select one</option>
+                                    <option value="Power">Power</option>
+                                    <option value="Precision">Precision</option>
+                                    <option value="Condition">Condition</option>
+                                    <option value="Healing">Healing</option>
+                                    <option value="Boon">Boon</option>
+                                    <option value="All">All</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource"></script>
+    <script src="./js/bb.js"></script>
+    <script src="./js/store.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+
+</html>

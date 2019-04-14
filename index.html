@@ -39,7 +39,7 @@
                                 {{ei.stats.statCombo.type}} ({{ei.stats.statCombo.name}})
                             </div>
                             <div class="">
-                                <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat'>✓</span><span v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat'>X</span>
+                                <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat' title='This is a correct stat option for this character'>✓</span><span v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat' title='This is an incorrect stat option for this character'>X</span>
                             </div>
                         </div>
                         <div v-if="!ei.stats || !ei.stats.statCombo"

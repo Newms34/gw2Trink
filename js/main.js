@@ -871,30 +871,11 @@ const mainComp = new Vue({
         },
         getFinished:function(char){
             // let ds = char.desiredStat;
-            return !char.equip.filter(eq=>eq.stats.statCombo.type!=char.desiredStat).length;//no remaining "bad" items
+            return !char.equip.filter(eq=>eq.stats.statCombo.type!=char.desiredStat||eq.stats.isExotic).length;//no remaining "bad" items
         }
     },
     created: function () {
-        // storage.config(Infinity)
-        // Vue.http.headers.common['Access-Control-Allow-Origin'] = '*'
-        // document.cookie = "test=thingy"
-        // console.log('component', this, 'is mounted. Congrats!')
-        const tasty = !!localStorage.getItem('gw2trinkAccept'),
-            self = this;
-        if (!tasty) {
-            bulmabox.confirm(`Accept Cookies?`, `Hi! GW2 Trinket Manager uses cookies to store stuff like your API key and your stat preferences. <br/>I kinda need this info to save your stuff, but I thought I'd warn you just in case.<br/>Are you okay with us using cookies?`, function (r) {
-                if (!r) {
-                    return false;
-                } else {
-                    localStorage.setItem('gw2trinkAccept', 'yep')
-                    self.getApiKey();
-                }
-            })
-        } else {
-            self.getApiKey();
-        }
+            this.getApiKey();
     }
 })
 
-//api key: B9DE7B9E-9DAD-2C40-BECD-12F9BA931FE0851EA3EB-B1AA-4FBB-B4BE-CCDD28F51644
-//sample (set attrib) item: 78479

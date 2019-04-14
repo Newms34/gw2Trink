@@ -15,20 +15,20 @@
         <table class="table" v-if='!!allChars'>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Race</th>
-                    <th>Profession</th>
+                    <th v-on:click='changeSort("name")' class='sortable-col'>Name <span v-if='sortStuff.col=="name" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="name" && !sortStuff.reverse'>&#9660;</span></th>
+                    <th v-on:click='changeSort("gender")' class='sortable-col'>Gender <span v-if='sortStuff.col=="gender" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="gender" && !sortStuff.reverse'>&#9660;</span></th>
+                    <th v-on:click='changeSort("race")' class='sortable-col'>Race <span v-if='sortStuff.col=="race" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="race" && !sortStuff.reverse'>&#9660;</span></th>
+                    <th v-on:click='changeSort("prof")' class='sortable-col'>Profession <span v-if='sortStuff.col=="prof" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="prof" && !sortStuff.reverse'>&#9660;</span></th>
                     <th v-for='s in slots'>{{s}}</th>
                     <th>Desired Attrib</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for='ch in allChars' v-bind:class='{"transp":getFinished(ch)}'>
+                <tr v-for='ch in userList' v-bind:class='{"transp":getFinished(ch)}'>
                     <td>{{ch.name}}</td>
                     <td>{{ch.gender}}</td>
                     <td>{{ch.race}}</td>
-                    <td>{{ch.prof}}</td>
+                    <td><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
                     <td v-for='ei in ch.equip'>
                         <div v-if='!!ei.stats && !!ei.stats.statCombo' class='is-fullwidth' v-bind:class="'has-background-'+ei.stats.statCombo.type" v-bind:title='getItemReport(ch.name,ei)'>
                             <!-- ({{ei.stats.isExotic}}) -->

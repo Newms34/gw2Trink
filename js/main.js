@@ -5,6 +5,7 @@ const mainComp = new Vue({
         allChars: [],
         slots: ['Accessory1', 'Accessory2', 'Backpack', 'Ring1', 'Ring2', 'Amulet'].sort(),
         apiKey: null,
+        panelBg:'#333',
         statCombos: [
             {
                 "name": "Mighty",
@@ -738,6 +739,11 @@ const mainComp = new Vue({
             Warrior:'https://render.guildwars2.com/file/0A97E13F29B3597A447EEC04A09BE5BD699A2250/156643.png',
             Guardian:'https://render.guildwars2.com/file/C32BE61FC55C962524624F643897ECF1A9C80462/156634.png',
             Revenant:'https://render.guildwars2.com/file/7C9309BE7A2A48C6A9FBCC70CC1EBEBFD7593C05/961390.png',
+        },
+        displayHalp:{
+            all:false,
+            api:false,
+            usage:false,
         }
     },
     methods: {
@@ -781,33 +787,36 @@ const mainComp = new Vue({
         newUser: function (key, chars) {
             console.log('new user stuff', key, chars)
             //this just creates "blank" chars. we'll then use a separate fn to actually get char info
-            let val = JSON.stringify({
+            let theDoods = chars.map(t => {
+                return {
+                    name: t,
+                    desiredStat: 'Power'
+                }
+            }),
+            val = JSON.stringify({
                 key: key,
-                chars: chars.map(t => {
-                    return {
-                        name: t,
-                        desiredStat: 'Power'
-                    }
-                })
+                chars: theDoods
             })
             storage.set('gw2trink', val, true)
             // console.log('cookies now', storage.keys())
-            this.getTrinkets(key, chars)
+            this.getTrinkets(key, theDoods)
         },
         setDesired: function () {
             let self = this;
             // console.log(self.allChars.map(q=>q.desiredStat+':'+q.name))
             let val = JSON.stringify({
                 key: self.apiKey,
-                chars: self.allChars
+                chars: self.allChars.map(q=>{
+                    return {name:q.name, desiredStat:q.desiredStat}
+                })
             })
             storage.set('gw2trink', val, true)
         },
         getTrinkets: function (k, u) {
-            // console.log('getting trinkets for characters', u, 'of account', k)
+            console.log('getting trinkets for characters', u, 'of account', k)
             const self = this,
                 charProms = u.map(uc => {
-                    return self.$http.get('https://api.guildwars2.com/v2/characters/' + uc.name + '?access_token=' + k)
+                    return self.$http.get('https://api.guildwars2.com/v2/characters/' + (typeof uc=='object'?uc.name:uc) + '?access_token=' + k)
                 });
             Promise.all(charProms).then(r => {
                 // console.log('DATA after geTrinkets', r, k, u, typeof u);
@@ -881,11 +890,26 @@ const mainComp = new Vue({
                         }
                         return 0;
                     });
+                    chd.equip = this.fillEmpty(chd.equip);//fill empty trinket slots with a blank label so table doesnt break 
                     console.log('THIS CHAR', chd.name, 'NOW', JSON.stringify(chd))
                     return chd;
                 });
                 console.log('Should now have equipment for all chars', self.allChars)
             })
+        },
+        fillEmpty:function(e){
+
+            e = this.slots.map(sl=>{
+                let theTrink = e.find(q=>q.slot==sl);
+                if(!theTrink){
+                    theTrink = {
+                        noTrink:true,
+                        slot:sl
+                    }
+                }
+                return theTrink
+            })
+            return e;
         },
         getStatCombo: function (a) {
             const atNames = Object.keys(a),
@@ -922,10 +946,22 @@ const mainComp = new Vue({
                 this.sortStuff.reverse = false;
                 this.sortStuff.col = c;
             }
+        },
+        removeUser:function(){
+            bulmabox.confirm("Remove API Key",`Are you sure you wish to remove this API key?`,(r)=>{
+                if(r && r!==null){
+                    storage.delete('gw2trink');
+                    window.location.reload();
+                }
+            })
         }
     },
     created: function () {
-            this.getApiKey();
+        this.getApiKey();
+        this.$http.get('https://api.guildwars2.com/v2/specializations/'+Math.ceil(Math.random()*63)).then(q=>{
+            console.log('BG IMG RESP',q)
+            this.panelBg = `url(${q.body.background})`
+        })
     },
     computed:{
         userList:function(){

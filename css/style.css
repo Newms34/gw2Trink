@@ -51,3 +51,24 @@ tr{
 .sortable-col:hover{
     background:#ddd;
 }
+.blocky{
+    display:block!important;
+}
+.is-one-tenth{
+    width:10%;
+    flex:none;
+}
+.is-eight-tenths{
+    width:80%;
+    flex:none;
+}
+.main-bg{
+    background:#000;
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position: center;
+}
+.modal-content{
+    width:80%;
+}

@@ -11,58 +11,147 @@
 </head>
 
 <body>
-    <div id="main">
-        <table class="table" v-if='!!allChars'>
-            <thead>
-                <tr>
-                    <th v-on:click='changeSort("name")' class='sortable-col'>Name <span v-if='sortStuff.col=="name" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="name" && !sortStuff.reverse'>&#9660;</span></th>
-                    <th v-on:click='changeSort("gender")' class='sortable-col'>Gender <span v-if='sortStuff.col=="gender" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="gender" && !sortStuff.reverse'>&#9660;</span></th>
-                    <th v-on:click='changeSort("race")' class='sortable-col'>Race <span v-if='sortStuff.col=="race" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="race" && !sortStuff.reverse'>&#9660;</span></th>
-                    <th v-on:click='changeSort("prof")' class='sortable-col'>Profession <span v-if='sortStuff.col=="prof" && sortStuff.reverse'>&#9650;</span><span v-if='sortStuff.col=="prof" && !sortStuff.reverse'>&#9660;</span></th>
-                    <th v-for='s in slots'>{{s}}</th>
-                    <th>Desired Attrib</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for='ch in userList' v-bind:class='{"transp":getFinished(ch)}'>
-                    <td>{{ch.name}}</td>
-                    <td>{{ch.gender}}</td>
-                    <td>{{ch.race}}</td>
-                    <td><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
-                    <td v-for='ei in ch.equip'>
-                        <div v-if='!!ei.stats && !!ei.stats.statCombo' class='is-fullwidth' v-bind:class="'has-background-'+ei.stats.statCombo.type" v-bind:title='getItemReport(ch.name,ei)'>
-                            <!-- ({{ei.stats.isExotic}}) -->
-                            <div class="">
-                                <span v-if='ei.stats.isExotic' title='Warning: This item is not ascended!'>🠻</span>
+    <div id="main" class='columns is-fullwidth main-bg' style='' v-bind:style='"background-image:"+panelBg'>
+        <div class="column is-one-tenth"></div>
+        <div class="panel column is-eight-tenths">
+            <div class="panel-heading has-text-white has-background-grey-darker is-size-3">
+                Guild Wars 2 Trinket Manager
+                <button class="button is-danger is-pulled-right" v-on:click='removeUser();' title='Remove this API key from memory'>X</button>
+                <button class="button is-link is-pulled-right" v-on:click='displayHalp.all=true;' title='View Instructions'>?</button>
+            </div>
+            <div class="panel-block blocky has-background-grey-lighter" style='min-height:900px;'>
+                <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
+                    <thead>
+                        <tr>
+                            <th v-on:click='changeSort("name")' class='sortable-col'>Name <span
+                                    v-if='sortStuff.col=="name" && sortStuff.reverse'>&#9650;</span><span
+                                    v-if='sortStuff.col=="name" && !sortStuff.reverse'>&#9660;</span></th>
+                            <th v-on:click='changeSort("gender")' class='sortable-col'>Gender <span
+                                    v-if='sortStuff.col=="gender" && sortStuff.reverse'>&#9650;</span><span
+                                    v-if='sortStuff.col=="gender" && !sortStuff.reverse'>&#9660;</span></th>
+                            <th v-on:click='changeSort("race")' class='sortable-col'>Race <span
+                                    v-if='sortStuff.col=="race" && sortStuff.reverse'>&#9650;</span><span
+                                    v-if='sortStuff.col=="race" && !sortStuff.reverse'>&#9660;</span></th>
+                            <th v-on:click='changeSort("prof")' class='sortable-col'>Profession <span
+                                    v-if='sortStuff.col=="prof" && sortStuff.reverse'>&#9650;</span><span
+                                    v-if='sortStuff.col=="prof" && !sortStuff.reverse'>&#9660;</span></th>
+                            <th v-for='s in slots'>{{s}}</th>
+                            <th>Desired Attrib</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for='ch in userList' v-bind:class='{"transp":getFinished(ch)}'>
+                            <td>{{ch.name}}</td>
+                            <td>{{ch.gender}}</td>
+                            <td>{{ch.race}}</td>
+                            <td><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span
+                                    v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
+                            <td v-for='ei in ch.equip'>
+                                <div v-if='!!ei.stats && !!ei.stats.statCombo' class='is-fullwidth'
+                                    v-bind:class="'has-background-'+ei.stats.statCombo.type"
+                                    v-bind:title='getItemReport(ch.name,ei)'>
+                                    <!-- ({{ei.stats.isExotic}}) -->
+                                    <div class="">
+                                        <span v-if='ei.stats.isExotic'
+                                            title='Warning: This item is not ascended!'>🠻</span>
+                                    </div>
+                                    <div class="is-size-7">
+                                        {{ei.stats.statCombo.type}} ({{ei.stats.statCombo.name}})
+                                    </div>
+                                    <div class="">
+                                        <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat'
+                                            title='This is a correct stat option for this character'>✓</span><span
+                                            v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat'
+                                            title='This is an incorrect stat option for this character'>X</span>
+                                    </div>
+                                </div>
+                                <div v-if="!ei.stats || !ei.stats.statCombo||ei.noTrink"
+                                    title="This trinket couldn't be found! It's probably not my fault."
+                                    class='is-fullwidth'>
+                                    No Trinket!
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select">
+                                    <select id="sel" v-model='ch.desiredStat' v-on:change='setDesired'>
+                                        <option disabled value="">Please select one</option>
+                                        <option value="Power">Power</option>
+                                        <option value="Precision">Precision</option>
+                                        <option value="Condition">Condition</option>
+                                        <option value="Healing">Healing</option>
+                                        <option value="Boon">Boon</option>
+                                        <option value="All">All</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal" v-bind:class='{"is-active":displayHalp.all}'>
+                <!-- the modal view-student-exercise window -->
+                <div class="modal-background" v-on:click='displayHalp.all=false'></div>
+                <div class="modal-content" v-on:click.stop>
+                    <div class="panel">
+                        <div class="panel-heading has-background-link has-text-white is-size-4 has-text-weight-bold">
+                            Instructions
+                            <button class="button is-danger is-small is-pulled-right" v-on:click='displayHalp.all=false'>x</button>
+                        </div>
+                        <div class="panel-block has-background-white blocky content">
+                            There are two steps in using this app. Click one of the 👁 icons below to learn more.
+                            <div class="notification">
+                                <div class="is-size-5 is-fullwidth">
+                                    Getting an API Key 
+                                    <button class="button is-small is-link is-pulled-right" v-on:click='displayHalp.api = !displayHalp.api;displayHalp.usage=false'>👁</button>
+                                </div>
+                                <div class="is-fullwidth" v-if='displayHalp.api'>
+
+                                    First, you'll need an API key. Head on over to the Guild Wars 2 account management site and grab yourself an API key:
+                                    <ol>
+                                        <li>Go <a href="https://account.arena.net" target='_blank'>here</a>!</li>
+                                        <li>Click the <code>Applications</code> tab</li>
+                                        <li>Click <code>New Key</code> (unless you have one already!).</li>
+                                        <li>Now you'll need to pick what "permissions" you want the key to have.
+                                            <ul>
+                                                <li>Remember that the GW2 API is <i>read-only</i> (you can't change anything on a GW2 account), so don't worry about giving the key too much information. In any case, the key's stored locally (on your computer), so no one but you can see it!</li>
+                                                <li>You have to pick "account", as that's a sort of "base" permission. You'll also need "characters", "builds" and "inventories".</li>
+                                            </ul>
+                                        </li>
+                                        <li>Click <code>CREATE API KEY</code> once you're happy with your choices.</li>
+                                        <li>Copy that API key down somewhere</li>
+                                    </ol>
+                                </div>
                             </div>
-                            <div class="is-size-7">
-                                {{ei.stats.statCombo.type}} ({{ei.stats.statCombo.name}})
-                            </div>
-                            <div class="">
-                                <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat' title='This is a correct stat option for this character'>✓</span><span v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat' title='This is an incorrect stat option for this character'>X</span>
+                            <div class="notification">
+                                <div class="is-size-5 is-fullwidth">
+                                    Using Guild Wars 2 Trinket Manager
+                                    <button class="button is-small is-link is-pulled-right" v-on:click='displayHalp.usage = !displayHalp.usage;displayHalp.api=false'>👁</button>
+                                </div>
+                                <div class="is-fullwidth" v-if='displayHalp.usage'>
+
+                                    This tool is designed to help you keep track of (preferably ascended) trinkets on your account. Once you provide an API key, it'll automatically retrieve and list all your characters on that account.
+                                    <ol>
+                                        <li>Each character will get a single row in the table.</li>
+                                        <li>You'll also have a dropdown list on the far-right for each character. This is your <i>target stat</i>.
+                                            <ul>
+                                                <li>For example, if you've selected "Power" as a target, trinkets with Berserker's, Valkyrie's, and Marauder's will be acceptable, whereas Sinister and Carrion will not (they're <i>Condition</i>).</li>
+                                                <li>I've only included a few for now, but I may include other options later</li>.
+                                            </ul>
+                                        </li>
+                                        <li>Your "goal" is, after picking a target stat, to fill each of the boxes with an appropriate, ascended trinket.
+                                            <ul>
+                                                <li>Any trinkets that are not ascended will have a small down arrow (🠻), indicating they should be upgraded</li>
+                                            </ul>
+                                        </li>
+                                        <li>For any character that has a full set of 6 ascended trinkets of the appropriate stat category, you'll see that row faded out, indicating that that character is finished!</li>
+                                    </ol>
+                                </div>
                             </div>
                         </div>
-                        <div v-if="!ei.stats || !ei.stats.statCombo"
-                            title="This trinket could'nt be found! It's probably not my fault." class='is-fullwidth'>
-                            ERROR
-                        </div>
-                    </td>
-                    <td>
-                        <div class="select">
-                            <select id="sel" v-model='ch.desiredStat' v-on:change='setDesired'>
-                                    <option disabled value="">Please select one</option>
-                                    <option value="Power">Power</option>
-                                    <option value="Precision">Precision</option>
-                                    <option value="Condition">Condition</option>
-                                    <option value="Healing">Healing</option>
-                                    <option value="Boon">Boon</option>
-                                    <option value="All">All</option>
-                            </select>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>

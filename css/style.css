@@ -72,3 +72,6 @@ tr{
 .modal-content{
     width:80%;
 }
+.no-show-row{
+    display:none;
+}

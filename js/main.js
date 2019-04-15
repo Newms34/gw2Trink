@@ -744,7 +744,8 @@ const mainComp = new Vue({
             all:false,
             api:false,
             usage:false,
-        }
+        },
+        hideCompleted:false
     },
     methods: {
         getApiKey: function () {

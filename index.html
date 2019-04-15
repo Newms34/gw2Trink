@@ -20,6 +20,15 @@
                 <button class="button is-link is-pulled-right" v-on:click='displayHalp.all=true;' title='View Instructions'>?</button>
             </div>
             <div class="panel-block blocky has-background-grey-lighter" style='min-height:900px;'>
+                <div class="is-fullwidth columns is-multiline">
+                    <div class="column is-full"></div>
+                    <div class="column is-one-fifth notification">
+                        Hide Completed Characters
+                    </div>
+                    <div class="column is-two-fifths">
+                        <input type="checkbox" class='checkbox' v-model='hideCompleted' id='tcc'> <label for="tcc"> Check to hide characters that are "completed" <br>(i.e., have all ascended trinkets of the right attribute type)</label>
+                    </div>
+                </div>
                 <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
                     <thead>
                         <tr>
@@ -40,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for='ch in userList' v-bind:class='{"transp":getFinished(ch)}'>
+                        <tr v-for='ch in userList' v-bind:class='{"transp":getFinished(ch), "no-show-row":getFinished(ch) && hideCompleted}'>
                             <td>{{ch.name}}</td>
                             <td>{{ch.gender}}</td>
                             <td>{{ch.race}}</td>

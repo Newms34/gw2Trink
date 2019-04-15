@@ -21,7 +21,7 @@ html,body{
 .has-background-Boon{
     background:rgb(163, 177, 255)
 }
-.has-background-Healing{
+.has-background-Heal{
     background:rgb(82, 220, 255)
 }
 .has-background-All{
@@ -39,7 +39,7 @@ html,body{
     transition-duration: .2s;
 }
 .transp:hover{
-    filter: blur(0px) brightness(0.6);
+    filter: blur(0px) brightness(0.8);
 }
 tr{
     background:#fff;

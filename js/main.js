@@ -25,7 +25,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Vital",
-                "type": "Vitality",
+                "type": "Tank",
                 "maxVals": [
                     "Vitality"
                 ],
@@ -33,7 +33,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Resilient",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -101,7 +101,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Stout",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -111,7 +111,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Hearty",
-                "type": "Vitality",
+                "type": "Tank",
                 "maxVals": [
                     "Vitality"
                 ],
@@ -206,7 +206,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Knight's",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -250,7 +250,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Soldier's",
-                "type": "Bad",
+                "type": "Not Recommended",
                 "maxVals": [
                     "Power"
                 ],
@@ -277,7 +277,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Celestial",
-                "type": "All",
+                "type": "Other",
                 "maxVals": [
                     "Power",
                     "Precision",
@@ -303,7 +303,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Cavalier's",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -349,7 +349,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Giver's (1 attrib)",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -357,7 +357,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Giver's (2 attrib)",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -367,7 +367,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Giver's (3 attrib)",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -389,7 +389,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Sentinel's",
-                "type": "Bad",
+                "type": "Not Recommended",
                 "maxVals": [
                     "Vitality"
                 ],
@@ -400,7 +400,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Settler's",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -506,7 +506,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Nomad's",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness"
                 ],
@@ -539,7 +539,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Trailblazer's",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Toughness",
                     "ConditionDamage"
@@ -551,7 +551,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Crusader",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Power",
                     "Toughness"
@@ -575,7 +575,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Vigilant",
-                "type": "Toughness",
+                "type": "Tank",
                 "maxVals": [
                     "Power",
                     "Toughness"
@@ -635,7 +635,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Seraph",
-                "type": "Random",
+                "type": "Other",
                 "maxVals": [
                     "Precision",
                     "ConditionDamage"
@@ -682,7 +682,7 @@ const mainComp = new Vue({
             },
             {
                 "name": "Plaguedoctor's",
-                "type": "Random",
+                "type": "Other",
                 "maxVals": [
                     "Vitality",
                     "ConditionDamage"
@@ -879,7 +879,7 @@ const mainComp = new Vue({
             // console.log('allInfusions',infus)
             // const needsUniq = _.uniqBy(needsCheck, 'id').map(q => q.id).concat(_.uniq(infus))
             //example:13459
-            self.$http.get('https://api.guildwars2.com/v2/items?ids=' + allIds.join(',')).then(ur => {
+            self.$http.get('https://api.guildwars2.com/v2/items?ids=' + _.uniq(allIds).join(',')).then(ur => {
                 console.log('items response', ur);
                 self.allChars = self.allChars.map(chd => {
                     chd.equip = chd.equip.map(chde => {
@@ -973,7 +973,7 @@ const mainComp = new Vue({
                 maxVal = Math.max(...unsortedVals),
                 minVal = Math.min(...unsortedVals);
             if (atNames.length > 5) {
-                return { name: 'Celestial', type: 'All' };
+                return { name: 'Celestial', type: 'Random' };
             }
             let bigVals = atNames.filter(ab => a[ab] == maxVal),
                 smallVals = atNames.filter(as => a[as] < maxVal && a[as] != maxVal);
@@ -993,7 +993,7 @@ const mainComp = new Vue({
         },
         getFinished: function (char) {
             // let ds = char.desiredStat;
-            return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && eq.stats.isExotic)).length;//no remaining "bad" items
+            return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && eq.stats.isExotic)).length;//no remaining "Not Recommended" items
         },
         changeSort: function (c) {
             if (this.sortStuff.col == c) {
@@ -1034,6 +1034,9 @@ const mainComp = new Vue({
         isSpef: function (c) {
             // console.log('Specific Stat Boolean thinger',this.statCombos.find(q))
             return !!this.statCombos.find(q => q.name == c)
+        },
+        spaceless:function(t){
+            return t.replace(' ','-')
         }
     },
     created: function () {
@@ -1063,7 +1066,7 @@ const mainComp = new Vue({
         },
         specifStatList: function () {
             const self = this;
-            return self.statCombos.filter(q => q.type == self.pickingStat.statCategory);
+            return self.statCombos.filter(q => self.pickingStat.statCategory=='All' || q.type == self.pickingStat.statCategory);
         },
         statInfo: function () {
             const self = this,

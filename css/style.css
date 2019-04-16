@@ -24,15 +24,19 @@ html,body{
 .has-background-Heal{
     background:rgb(82, 220, 255)
 }
-.has-background-All{
+.has-background-Random{
     background:linear-gradient(to left,#fcc,#ffc,#cfc,#ccf,#fcf)
 }
-.has-background-Random{
+.has-background-Other{
     background:rgb(206, 206, 206)
 }
-.has-background-Bad{
+.has-background-Not-Recommended{
     background:#333;
     color:#fff;
+}
+.has-background-Tank{
+    background:#aaa;
+    /* color:#fff; */
 }
 .transp{
     filter:blur(1px) brightness(.5);

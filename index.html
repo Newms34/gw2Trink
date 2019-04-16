@@ -81,7 +81,7 @@
                                     v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
                             <td v-for='ei in ch.equip'>
                                 <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth'
-                                    v-bind:class="'has-background-'+ei.stats.theItem.type+' rare-border-'+ei.stats.rarity"
+                                    v-bind:class="'has-background-'+spaceless(ei.stats.theItem.type)+' rare-border-'+ei.stats.rarity"
                                     v-bind:title='getItemReport(ch.name,ei)'>
                                     <div class="is-fullwidth">
                                         <!-- status stuffs -->
@@ -241,11 +241,15 @@
                                         <option value="Condition">Condition</option>
                                         <option value="Heal">Heal</option>
                                         <option value="Boon">Boon</option>
-                                        <option value="Toughness">Tank</option>
+                                        <option value="Tank">Tank</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Not Recommended">Not Recommended</option>
                                         <option value="All">All</option>
-                                        <option value="Random">Other</option>
                                     </select>
                                 </div>
+                                <div class="notification is-danger" v-if='pickingStat.statCategory=="All" && (!pickingStat.specific || !pickingStat.specificStat)'><i class="fa fa-exclamation-triangle is-size-3"></i>&nbsp;Category "All" isn't a valid category (it's basically <i>every</i> stat option), so you'll need to pick a specific category below!</div>
+                                <div class="is-fullwidth"></div>
+                                <div class="notification is-warning" v-if='pickingStat.statCategory=="Not Recommended"'><i class="fa fa-exclamation-triangle is-size-3"></i>&nbsp;Category "Not Recommended" contains stat combinations which I'd personally not recommend you use. Usually, they're too middle-of-the-road to be useful.</div>
                                 <div class="is-fullwidth"></div>
                             </div>
                             <div class="has-text-weight-bold column is-one-fifth notification">Specific Stat (Optional):
@@ -267,7 +271,7 @@
                                 <div class="is-fullwidth" v-if='!pickingStat.specific'>(No specific stat)</div>
                             </div>
                             <div class="column is-two-fifths"></div>
-                            <button class="column is-one-fifth button is-info" v-on:click='doPickStat'>Pick it!</button>
+                            <button class="column is-one-fifth button is-info" v-bind:disabled='pickingStat.statCategory=="All" && (!pickingStat.specific || !pickingStat.specificStat)' v-on:click='doPickStat'>Pick it!</button>
                             <div class="column is-full"></div>
                         </div>
                     </div>

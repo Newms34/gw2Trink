@@ -746,7 +746,8 @@ const mainComp = new Vue({
             usage: false,
         },
         hideCompleted: false,
-        hideSubEighty:false,
+        hideSubEighty:false, 
+        loaded:false,
         pickingStat: {
             picking: false,
             char: {
@@ -857,7 +858,8 @@ const mainComp = new Vue({
         },
         checkAttribs: function () {
             const needsCheck = [],
-                self = this;
+                self = this,
+                allIds = [];
             //get attributes for non-stat-selectable items
             this.allChars.forEach(ch => {
                 ch.equip.forEach(che => {
@@ -868,38 +870,62 @@ const mainComp = new Vue({
                             slot: che.slot
                         })
                     }
+                    if(che.infusions && che.infusions.length){
+                        allIds.push(...che.infusions)
+                    }
+                    allIds.push(che.id);
                 })
             });
-            const needsUniq = _.uniqBy(needsCheck, 'id').map(q => q.id)
-            console.log('The following items need stat checks via gw2spidy (because we <3 official api and dont want to break it)', needsCheck, needsUniq)
+            // console.log('allInfusions',infus)
+            // const needsUniq = _.uniqBy(needsCheck, 'id').map(q => q.id).concat(_.uniq(infus))
             //example:13459
-            self.$http.get('https://api.guildwars2.com/v2/items?ids=' + needsUniq.join(',')).then(ur => {
+            self.$http.get('https://api.guildwars2.com/v2/items?ids=' + allIds.join(',')).then(ur => {
                 console.log('items response', ur);
                 self.allChars = self.allChars.map(chd => {
                     chd.equip = chd.equip.map(chde => {
                         if (!self.slots.includes(chde.slot)) {
+                            //this is not a trinket!
                             return false;
                         }
-                        let statCombo = ur.body.find(q => q.id == chde.id),
-                            noHazStat = !chde.stats || !chde.stats.attributes;
+                        let yourItem = ur.body.find(q => q.id == chde.id),
+                            noHazStat = !chde.stats || !chde.stats.attributes;//boolean to tell us if the item has no stats (i.e., is like stat selectable, such as a lws3 trinket).
+
 
                         if (noHazStat) {
-                            // console.log('item', chde, 'with id', chde.id, 'has no recorded stats yet and its statCombo obj should be', statCombo)
+                            //this item doesnt haz stats, so we need to supply it!
+                            // console.log('item', chde, 'with id', chde.id, 'has no recorded stats yet and its theItem obj should be', theItem)
                             chde.stats = {
                                 attributes: {
                                 },
-                                statCombo: 'Unknown',
-                                isExotic: statCombo.rarity && statCombo.rarity != 'Ascended'
+                                theItem: 'Unknown',
+                                isExotic: yourItem.rarity && yourItem.rarity != 'Ascended'
                             }
-                            statCombo.details.infix_upgrade.attributes.forEach(at => {
+                            yourItem.details.infix_upgrade.attributes.forEach(at => {
                                 chde.stats.attributes[at.attribute] = at.modifier;
                             })
                             // console.log('Stats now', chde.stats)
                         } else {
                             // console.log(chde)
-                            chde.stats.statCombo = 'Unknown';
+                            console.log('RAN THE ELSE FOR',chde)
+                            chde.stats.theItem = 'Unknown';
                         }
-                        chde.stats.statCombo = self.getStatCombo(chde.stats.attributes);
+                        chde.stats.theItem = self.getStatCombo(chde.stats.attributes);
+                        if(chde.infusions && chde.infusions.length){
+                            chde.infusions = chde.infusions.map(chdef=>{
+                                let tin = ur.body.find(q=>q.id==chdef),
+                                hazAr = tin.details.infix_upgrade.attributes.find(q=>q.attribute=='AgonyResistance');
+
+                                return {
+                                    plusAgony: hazAr && hazAr.modifier
+                                }
+                            })
+                        }
+                        //finally, give us a name and a piksher
+                        if(!!yourItem){
+                            chde.name=yourItem.name;
+                            chde.icon=yourItem.icon;
+                        }
+                        
                         return chde;
                     }).filter(af => !!af).sort((a, b) => {
                         if (a.slot > b.slot) {
@@ -909,15 +935,16 @@ const mainComp = new Vue({
                         }
                         return 0;
                     });
+                    
                     chd.equip = this.fillEmpty(chd.equip);//fill empty trinket slots with a blank label so table doesnt break 
                     console.log('THIS CHAR', chd.name, 'NOW', JSON.stringify(chd))
                     return chd;
                 });
                 console.log('Should now have equipment for all chars', self.allChars)
-            })
+            });
+            this.loaded=true;
         },
         fillEmpty: function (e) {
-
             e = this.slots.map(sl => {
                 let theTrink = e.find(q => q.slot == sl);
                 if (!theTrink) {
@@ -929,6 +956,15 @@ const mainComp = new Vue({
                 return theTrink
             })
             return e;
+        },
+        sum:function(it){
+            let allAgony = 0;
+            it.forEach(n=>{
+                if(n.plusAgony && !isNaN(n.plusAgony)){
+                    allAgony+=n.plusAgony;
+                }
+            })
+            return allAgony
         },
         getStatCombo: function (a) {
             const atNames = Object.keys(a),
@@ -952,11 +988,11 @@ const mainComp = new Vue({
             return finalCombo && { name: finalCombo.name, type: finalCombo.type };
         },
         getItemReport: function (char, item) {
-            return `${char}'s ${item.slot} has ${item.stats.statCombo.name} stats (a ${item.stats.statCombo.type} stat combo).`
+            return `${char}'s ${item.slot} has ${item.stats.theItem.name} stats (a ${item.stats.theItem.type} stat combo).`
         },
         getFinished: function (char) {
             // let ds = char.desiredStat;
-            return !char.equip.filter(eq => (eq.stats && eq.stats.statCombo && eq.stats.statCombo.type != char.desiredStat) || (eq.stats && eq.stats.isExotic)).length;//no remaining "bad" items
+            return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && eq.stats.isExotic)).length;//no remaining "bad" items
         },
         changeSort: function (c) {
             if (this.sortStuff.col == c) {
@@ -1000,6 +1036,7 @@ const mainComp = new Vue({
         }
     },
     created: function () {
+        this.loaded=false;
         this.getApiKey();
         this.$http.get('https://api.guildwars2.com/v2/specializations/' + Math.ceil(Math.random() * 63)).then(q => {
             console.log('BG IMG RESP', q)
@@ -1061,6 +1098,16 @@ const mainComp = new Vue({
                 }
                 return fullStr;
             }
+        },
+        numHidden:function(){
+            let num = 0, self=this;
+            if(self.hideCompleted){
+                num+= self.userList.filter(q=>!!self.getFinished(q)).length;
+            }
+            if(self.hideSubEighty){
+                num+= self.userList.filter(a=>a.level<80).length;
+            }
+            return num;
         }
     }
 })

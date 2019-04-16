@@ -19,7 +19,7 @@
             <div class="panel-heading has-text-white has-background-grey-darker is-size-3">
                 Guild Wars 2 Trinket Manager
                 <button class="button is-danger is-pulled-right" v-on:click='removeUser();'
-                    title='Remove this API key from memory'>X</button>
+                    title='Remove this API key from memory'><i class="fa fa-times"></i></button>
                 <button class="button is-link is-pulled-right" v-on:click='displayHalp.all=true;'
                     title='View Instructions'>?</button>
             </div>
@@ -30,17 +30,20 @@
                         Hide Completed Characters
                     </div>
                     <div class="column is-two-fifths">
-                        <input type="checkbox" class='checkbox' v-model='hideCompleted' id='tcc' v-on:change='setDesired'> <label for="tcc">
+                        <input type="checkbox" class='checkbox' v-model='hideCompleted' id='tcc'
+                            v-on:change='setDesired'> <label for="tcc">
                             Check to hide characters that are "completed" <br>(i.e., have all ascended trinkets of the
                             right attribute type)</label>
                     </div>
                     <div class="column is-one-fifth notification">
-                            Hide Sub-Lvl-80 Characters
-                        </div>
-                        <div class="column is-one-fifth">
-                            <input type="checkbox" class='checkbox' v-model='hideSubEighty' id='hsm' v-on:change='setDesired'> <label for="hsm">
-                                Check to hide characters that are not level 80</label>
-                        </div>
+                        Hide Sub-Lvl-80 Characters
+                    </div>
+                    <div class="column is-one-fifth">
+                        <input type="checkbox" class='checkbox' v-model='hideSubEighty' id='hsm'
+                            v-on:change='setDesired'> <label for="hsm">
+                            Check to hide characters that are not level 80</label>
+                    </div>
+                    <div class="column is-full">Hidden Characters: {{numHidden}}</div>
                 </div>
                 <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
                     <thead>
@@ -62,40 +65,60 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr v-if='!loaded'>
+                            <td colspan='11' class='has-text-centered is-size-4 has-text-weight-bold'>
+                                loading...
+                            </td>
+                        </tr>
                         <tr v-for='ch in userList'
                             v-bind:class='{"transp":getFinished(ch), "no-show-row":(getFinished(ch) && hideCompleted)||(ch.level<80 && hideSubEighty)}'>
-                            <td>{{ch.name}} <i class="fa fa-arrow-down is-size-6" v-bind:title='ch.name+" is not level 80! "+(ch.gender=="Female"?"She":"He")+" cannot equip ascended trinkets."' v-if='ch.level<80'></i></td>
+                            <td>{{ch.name}} <i class="fa fa-arrow-down is-size-6"
+                                    v-bind:title='ch.name+" is not level 80! "+(ch.gender=="Female"?"She":"He")+" cannot equip ascended trinkets."'
+                                    v-if='ch.level<80'></i></td>
                             <td>{{ch.gender}}</td>
                             <td>{{ch.race}}</td>
                             <td><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span
                                     v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
                             <td v-for='ei in ch.equip'>
-                                <div v-if='!!ei.stats && !!ei.stats.statCombo' class='is-fullwidth'
-                                    v-bind:class="'has-background-'+ei.stats.statCombo.type"
+                                <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth'
+                                    v-bind:class="'has-background-'+ei.stats.theItem.type"
                                     v-bind:title='getItemReport(ch.name,ei)'>
                                     <!-- ({{ei.stats.isExotic}}) -->
-                                    <div class="">
-                                        <span v-if='ei.stats.isExotic'
-                                            title='Warning: This item is not ascended!'><i class="fa fa-arrow-down is-size-7"></i></span>
+                                    <div class="is-fullwidth">
+                                        <!-- status stuffs -->
+                                        <span v-if='ch.desiredStat && ei.stats.theItem.type==ch.desiredStat'
+                                            title='This is a correct stat option for this character'><i
+                                                class="fa fa-check"></i></span>
+                                        <span v-if='ch.desiredStat && ei.stats.theItem.type!=ch.desiredStat'
+                                            title='This is an incorrect stat option for this character'><i
+                                                class="fa fa-times"></i></span>
+                                        <span v-if='ei.stats.isExotic' title='Warning: This item is not ascended!'
+                                            class=''><i class="fa fa-arrow-down is-size-7"></i></span>
+                                        <span class="is-size-7"
+                                            v-if='ei.infusions && ei.infusions.length && sum(ei.infusions)'
+                                            title="This trinket's agony resistance">
+                                            <i class="fa fa-cog"></i> {{sum(ei.infusions)}}
+                                        </span>
                                     </div>
-                                    <div class="is-size-7">
-                                        {{ei.stats.statCombo.type}} ({{ei.stats.statCombo.name}})
+                                    <div class="is-size-8 is-fullwidth">
+                                        {{ei.stats.theItem.type}} ({{ei.stats.theItem.name}})
                                     </div>
                                     <div class="">
-                                        <span v-if='ch.desiredStat && ei.stats.statCombo.type==ch.desiredStat'
-                                            title='This is a correct stat option for this character'>✓</span><span
-                                            v-if='ch.desiredStat && ei.stats.statCombo.type!=ch.desiredStat'
-                                            title='This is an incorrect stat option for this character'>X</span>
+                                        <div class="is-size-7">{{ei.name}}</div>
+                                        <img v-bind:src="ei.icon" v-bind:alt="ei.name+' icon'">
                                     </div>
                                 </div>
-                                <div v-if="!ei.stats || !ei.stats.statCombo||ei.noTrink"
+                                <div v-if="!ei.stats || !ei.stats.theItem||ei.noTrink"
                                     title="This trinket couldn't be found! It's probably not my fault."
                                     class='is-fullwidth'>
                                     No Trinket!
                                 </div>
                             </td>
                             <td>
-                                <span class='is-size-7'><i class="fa fa-database" v-if='!isSpef(ch.desiredStat)' title='This is a general stat'></i><i class="fa fa-crosshairs" v-if='isSpef(ch.desiredStat)' title='This is a specific stat'></i>&nbsp;{{ch.desiredStat}}</span>
+                                <span class='is-size-7'><i class="fa fa-database" v-if='!isSpef(ch.desiredStat)'
+                                        title='This is a general stat'></i><i class="fa fa-crosshairs"
+                                        v-if='isSpef(ch.desiredStat)'
+                                        title='This is a specific stat'></i>&nbsp;{{ch.desiredStat}}</span>
                                 <button class="button is-dark is-small" v-on:click='showPickStat(ch)'><i
                                         class="fa fa-bar-chart"></i>Pick Stat</button>
                             </td>
@@ -171,7 +194,8 @@
                                     <li>Your "goal" is, after picking a target stat, to fill each of the boxes with an
                                         appropriate, ascended trinket.
                                         <ul>
-                                            <li>Any trinkets that are not ascended will have a small down arrow (<i class="fa fa-arrow-down is-size-7"></i>),
+                                            <li>Any trinkets that are not ascended will have a small down arrow (<i
+                                                    class="fa fa-arrow-down is-size-7"></i>),
                                                 indicating they should be upgraded</li>
                                         </ul>
                                     </li>

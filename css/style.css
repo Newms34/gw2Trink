@@ -75,3 +75,10 @@ tr{
 .no-show-row{
     display:none;
 }
+.item-icon{
+    max-width: 30px;
+    max-height: 30px;
+}
+.is-size-8{
+    font-size:0.6rem!important;
+}

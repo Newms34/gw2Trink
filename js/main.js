@@ -348,7 +348,7 @@ const mainComp = new Vue({
                 ]
             },
             {
-                "name": "Giver's",
+                "name": "Giver's (1 attrib)",
                 "type": "Toughness",
                 "maxVals": [
                     "Toughness"
@@ -356,7 +356,7 @@ const mainComp = new Vue({
                 "minVals": []
             },
             {
-                "name": "Giver's",
+                "name": "Giver's (2 attrib)",
                 "type": "Toughness",
                 "maxVals": [
                     "Toughness"
@@ -366,7 +366,7 @@ const mainComp = new Vue({
                 ]
             },
             {
-                "name": "Giver's",
+                "name": "Giver's (3 attrib)",
                 "type": "Toughness",
                 "maxVals": [
                     "Toughness"

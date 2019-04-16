@@ -898,7 +898,7 @@ const mainComp = new Vue({
                                 attributes: {
                                 },
                                 theItem: 'Unknown',
-                                isExotic: yourItem.rarity && yourItem.rarity != 'Ascended'
+                                rarity: yourItem.rarity
                             }
                             yourItem.details.infix_upgrade.attributes.forEach(at => {
                                 chde.stats.attributes[at.attribute] = at.modifier;
@@ -906,6 +906,7 @@ const mainComp = new Vue({
                             // console.log('Stats now', chde.stats)
                         } else {
                             // console.log(chde)
+                            chde.stats.rarity = yourItem && yourItem.rarity;
                             console.log('RAN THE ELSE FOR',chde)
                             chde.stats.theItem = 'Unknown';
                         }

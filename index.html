@@ -81,9 +81,8 @@
                                     v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
                             <td v-for='ei in ch.equip'>
                                 <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth'
-                                    v-bind:class="'has-background-'+ei.stats.theItem.type"
+                                    v-bind:class="'has-background-'+ei.stats.theItem.type+' rare-border-'+ei.stats.rarity"
                                     v-bind:title='getItemReport(ch.name,ei)'>
-                                    <!-- ({{ei.stats.isExotic}}) -->
                                     <div class="is-fullwidth">
                                         <!-- status stuffs -->
                                         <span v-if='ch.desiredStat && ei.stats.theItem.type==ch.desiredStat'
@@ -92,7 +91,7 @@
                                         <span v-if='ch.desiredStat && ei.stats.theItem.type!=ch.desiredStat'
                                             title='This is an incorrect stat option for this character'><i
                                                 class="fa fa-times"></i></span>
-                                        <span v-if='ei.stats.isExotic' title='Warning: This item is not ascended!'
+                                        <span v-if='ei.stats.rarity && ei.stats.rarity!="Ascended" && ei.stats.rarity!="Legendary"' title='Warning: This item is not ascended!'
                                             class=''><i class="fa fa-arrow-down is-size-7"></i></span>
                                         <span class="is-size-7"
                                             v-if='ei.infusions && ei.infusions.length && sum(ei.infusions)'

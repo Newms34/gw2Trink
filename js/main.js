@@ -42,14 +42,14 @@ const mainComp = new Vue({
     },
     methods: {
         getApiKey: function () {
-            console.log('storage', storage, storage.getStore, storage.getStore('gw2trink'))
+            // console.log('storage', storage, storage.getStore, storage.getStore('gw2trink'))
             // console.log(storage)
             let usrData = storage.getStore('gw2trink'),
                 self = this;
             if (usrData && typeof usrData == 'string') {
                 usrData = JSON.parse(usrData)
             }
-            console.log(usrData, storage)
+            // console.log(usrData, storage)
             if (!usrData) {
                 bulmabox.prompt(`New User`, `Hi! Looks like we don't have a GW2 API key stored for you. Since this tool works on a per-account basis, we can't really show you anything if we don't have any info. Don't worry; API keys are read-only, so this won't allow us to change anything!<hr/>Head over to <a href="https://account.arena.net" target="_blank">the ArenaNet site</a> and pick one up.<hr/><b>My API Key:</b>`, function (d) {
                     if (!d) {
@@ -71,7 +71,7 @@ const mainComp = new Vue({
                     }
                 })
             } else {
-                console.log('Your user is', usrData)
+                // console.log('Your user is', usrData)
                 self.apiKey = usrData.key;
                 self.chars = usrData.chars
                 self.hideCompleted = !!usrData.thc;
@@ -81,7 +81,7 @@ const mainComp = new Vue({
             }
         },
         newUser: function (key, chars) {
-            console.log('new user stuff', key, chars)
+            // console.log('new user stuff', key, chars)
             //this just creates "blank" chars. we'll then use a separate fn to actually get char info
             let theDoods = chars.map(t => {
                 return {
@@ -113,7 +113,7 @@ const mainComp = new Vue({
             storage.setStore('gw2trink', val, true)
         },
         getTrinkets: function (k, u) {
-            console.log('getting trinkets for characters', u, 'of account', k)
+            // console.log('getting trinkets for characters', u, 'of account', k)
             const self = this,
                 charProms = u.map(uc => {
                     return self.$http.get('https://api.guildwars2.com/v2/characters/' + (typeof uc == 'object' ? uc.name : uc) + '?access_token=' + k)
@@ -122,7 +122,7 @@ const mainComp = new Vue({
                 // console.log('DATA after geTrinkets', r, k, u, typeof u);
                 //NOTE: should PROBLY have some sort of method, via traits, to detect which specialization this uses.
                 self.allChars = r.map(ru => {
-                    console.log('CHAR', ru.body.name, 'DATA', ru.body)
+                    // console.log('CHAR', ru.body.name, 'DATA', ru.body)
                     let theProf = ru.body.profession, profPic = data.nonEliteIcons[ru.body.profession];
                     ru.body.specializations.pve.forEach(ps => {
                         if (ps && data.eliteSpecIds[ps.id]) {
@@ -168,7 +168,7 @@ const mainComp = new Vue({
                     data.walletCurrencies.forEach(wc => {
                         wc.amount += wlts.body.find(wlc => wlc.id == wc.id).value;
                     });
-                    console.log('CURRENCIES', data.walletCurrencies, data.collectableCurrencies)
+                    // console.log('CURRENCIES', data.walletCurrencies, data.collectableCurrencies)
                 });
             });
             // console.log('CURRENCIES!',self.collectableCurrencies)

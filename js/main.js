@@ -1,4 +1,5 @@
-// import {storage} from './store.js';
+import * as storage from './store.js';
+import data from './data.js'
 const mainComp = new Vue({
     el: '#main',
     data: {
@@ -6,739 +7,9 @@ const mainComp = new Vue({
         slots: ['Accessory1', 'Accessory2', 'Backpack', 'Ring1', 'Ring2', 'Amulet'].sort(),
         apiKey: null,
         panelBg: '#333',
-        statCombos: [
-            {
-                "name": "Mighty",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Precise",
-                "type": "Precision",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Vital",
-                "type": "Tank",
-                "maxVals": [
-                    "Vitality"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Resilient",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Lingering",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Strong",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Precision"
-                ]
-            },
-            {
-                "name": "Ravaging",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Precision"
-                ]
-            },
-            {
-                "name": "Rejuvenating",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Power"
-                ]
-            },
-            {
-                "name": "Vigorous",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Mending",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Stout",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Hearty",
-                "type": "Tank",
-                "maxVals": [
-                    "Vitality"
-                ],
-                "minVals": [
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Potent",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Penetrating",
-                "type": "Precision",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": [
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Honed",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Shaman's",
-                "type": "Vitality",
-                "maxVals": [
-                    "Vitality"
-                ],
-                "minVals": [
-                    "Healing",
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Rabid",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Cleric's",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Power",
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Magi's",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Valkyrie",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Vitality",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Knight's",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Power",
-                    "Precision"
-                ]
-            },
-            {
-                "name": "Rampager's",
-                "type": "Condition",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": [
-                    "Power",
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Carrion",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Power",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Berserker's",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Precision",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Soldier's",
-                "type": "Not Recommended",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Healing",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Malign",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Celestial",
-                "type": "Other",
-                "maxVals": [
-                    "Power",
-                    "Precision",
-                    "Toughness",
-                    "Vitality",
-                    "CritDamage",
-                    "Healing",
-                    "ConditionDamage"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Dire and Rabid",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Toughness",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Cavalier's",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Power",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Berserker's and Valkyrie",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Vitality",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Rabid and Apothecary's",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Healing",
-                    "Toughness",
-                    "Precision"
-                ]
-            },
-            {
-                "name": "Apothecary's",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Giver's (1 attrib)",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": []
-            },
-            {
-                "name": "Giver's (2 attrib)",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Giver's (3 attrib)",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Healing",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Captain's",
-                "type": "Precision",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": [
-                    "Power",
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Sentinel's",
-                "type": "Not Recommended",
-                "maxVals": [
-                    "Vitality"
-                ],
-                "minVals": [
-                    "Power",
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Settler's",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Healing",
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Assassin's",
-                "type": "Precision",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": [
-                    "Power",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Dire",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Hunter's",
-                "type": "Precision",
-                "maxVals": [
-                    "Precision"
-                ],
-                "minVals": [
-                    "Power"
-                ]
-            },
-            {
-                "name": "Zealot's",
-                "type": "Heal",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Forsaken",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Apostate's",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Survivor's",
-                "type": "Heal",
-                "maxVals": [
-                    "Healing"
-                ],
-                "minVals": [
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Deserter's",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Vagabond's",
-                "type": "Power",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Toughness"
-                ]
-            },
-            {
-                "name": "Nomad's",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness"
-                ],
-                "minVals": [
-                    "Vitality",
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Bringer's",
-                "type": "ConditionDuration",
-                "maxVals": [
-                    "ConditionDuration"
-                ],
-                "minVals": [
-                    "Precision",
-                    "Vitality"
-                ]
-            },
-            {
-                "name": "Sinister",
-                "type": "Condition",
-                "maxVals": [
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Power",
-                    "Precision"
-                ]
-            },
-            {
-                "name": "Trailblazer's",
-                "type": "Tank",
-                "maxVals": [
-                    "Toughness",
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Vitality",
-                    "ConditionDuration"
-                ]
-            },
-            {
-                "name": "Crusader",
-                "type": "Tank",
-                "maxVals": [
-                    "Power",
-                    "Toughness"
-                ],
-                "minVals": [
-                    "CritDamage",
-                    "Healing"
-                ]
-            },
-            {
-                "name": "Marauder",
-                "type": "Power",
-                "maxVals": [
-                    "Power",
-                    "Precision"
-                ],
-                "minVals": [
-                    "Vitality",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Vigilant",
-                "type": "Tank",
-                "maxVals": [
-                    "Power",
-                    "Toughness"
-                ],
-                "minVals": [
-                    "BoonDuration",
-                    "ConditionDuration"
-                ]
-            },
-            {
-                "name": "Minstrel's",
-                "type": "Heal",
-                "maxVals": [
-                    "Toughness",
-                    "Healing"
-                ],
-                "minVals": [
-                    "Vitality",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Commander's",
-                "type": "Boon",
-                "maxVals": [
-                    "Power",
-                    "Precision"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Viper's",
-                "type": "Condition",
-                "maxVals": [
-                    "Power",
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Precision",
-                    "ConditionDuration"
-                ]
-            },
-            {
-                "name": "Wanderer's",
-                "type": "Boon",
-                "maxVals": [
-                    "Power",
-                    "Vitality"
-                ],
-                "minVals": [
-                    "Toughness",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Seraph",
-                "type": "Other",
-                "maxVals": [
-                    "Precision",
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Healing",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Grieving",
-                "type": "Condition",
-                "maxVals": [
-                    "Power",
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Precision",
-                    "CritDamage"
-                ]
-            },
-            {
-                "name": "Marshal's",
-                "type": "Heal",
-                "maxVals": [
-                    "Power",
-                    "Healing"
-                ],
-                "minVals": [
-                    "Precision",
-                    "ConditionDamage"
-                ]
-            },
-            {
-                "name": "Harrier's",
-                "type": "Heal",
-                "maxVals": [
-                    "Power"
-                ],
-                "minVals": [
-                    "Healing",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Plaguedoctor's",
-                "type": "Other",
-                "maxVals": [
-                    "Vitality",
-                    "ConditionDamage"
-                ],
-                "minVals": [
-                    "Healing",
-                    "BoonDuration"
-                ]
-            },
-            {
-                "name": "Diviner's",
-                "type": "Boon",
-                "maxVals": [
-                    "Power",
-                    "BoonDuration"
-                ],
-                "minVals": [
-                    "Precision",
-                    "CritDamage"
-                ]
-            }
-        ],
         sortStuff: {
             col: 'name',
             reverse: false
-        },
-        eliteSpecIds: {
-            5: { name: "Druid", icon: "https://render.guildwars2.com/file/033CFD3270277F38215AE60574BCC2000873BDFF/1128575.png" },
-            7: { name: "Daredevil", icon: "https://render.guildwars2.com/file/CEA6755F350FAAE9A7D8796CF8CC10FA1E33081D/1128571.png" },
-            18: { name: "Berserker", icon: "https://render.guildwars2.com/file/3111C4ACA223F8B654B3453A42F7539D64EE953A/1128567.png" },
-            27: { name: "Dragonhunter", icon: "https://render.guildwars2.com/file/4161C630AA50667FDCBF01042D07021CE44451C9/1128573.png" },
-            34: { name: "Reaper", icon: "https://render.guildwars2.com/file/6E9C230241E83DFCAA0B0C11ED32ED0CB605C0EC/1128579.png" },
-            40: { name: "Chronomancer", icon: "https://render.guildwars2.com/file/B0A3C5B4097705AE21E9CB78E53045E327F1C7C9/1128569.png" },
-            43: { name: "Scrapper", icon: "https://render.guildwars2.com/file/5749382E61E622D8E9E00FA60D4CEAADA3E12715/1128581.png" },
-            48: { name: "Tempest", icon: "https://render.guildwars2.com/file/BC1D0645C1304238F6154C9F366DEBD014FD7AD4/1128583.png" },
-            52: { name: "Herald", icon: "https://render.guildwars2.com/file/0D29C2DC29FFD156082572B41310D00914029E6C/1128577.png" },
-            55: { name: "Soulbeast", icon: "https://render.guildwars2.com/file/F80AC2AFAAF55C0F7F012C7EBECC90FD01F27FE9/1770215.png" },
-            56: { name: "Weaver", icon: "https://render.guildwars2.com/file/C4B549D62A43E1BF490197E212B21879C4214008/1670506.png" },
-            57: { name: "Holosmith", icon: "https://render.guildwars2.com/file/5DCFFC66A63466DFEBD29ACFA605CF00C708CBF3/1770225.png" },
-            58: { name: "Deadeye", icon: "https://render.guildwars2.com/file/E4CDA974AF47D2336E02211E4667FE5C9579774F/1770213.png" },
-            59: { name: "Mirage", icon: "https://render.guildwars2.com/file/52285431289AE4FE39E8A21D4333E137A5EF0921/1770217.png" },
-            60: { name: "Scourge", icon: "https://render.guildwars2.com/file/B10D1AB5AA0B0CFE7D26A142E99414C26244359C/1770221.png" },
-            61: { name: "Spellbreaker", icon: "https://render.guildwars2.com/file/C105F67C30BBD0FE0A26CB97E90B481419927D50/1770223.png" },
-            62: { name: "Firebrand", icon: "https://render.guildwars2.com/file/A1287D0FD1159CAC3A58C212C94A4BD0AB32A8D3/1770211.png" },
-            63: { name: "Renegade", icon: "https://render.guildwars2.com/file/A347E09ED9C6537C7D13EC212229468078C0F0E9/1770219.png" }
-        },//'list' of all elite specs, and their icons
-        nonEliteIcons: {
-            Elementalist: 'https://render.guildwars2.com/file/77B793123251931AFF9FCA24C07E0F704BC4DA49/156630.png',
-            Thief: 'https://render.guildwars2.com/file/F9EC00E23F630D6DB20CDA985592EC010E2A5705/156641.png',
-            Mesmer: 'https://render.guildwars2.com/file/E43730AD49A903C3A1B4F27E41DE04EA51A775EC/156636.png',
-            Necromancer: 'https://render.guildwars2.com/file/AE56F8670807B87CF6EEE3FC7E6CB9710959E004/156638.png',
-            Ranger: 'https://render.guildwars2.com/file/49B10316B424F4E20139EB5E51ADCF24A8724E9B/156640.png',
-            Engineer: 'https://render.guildwars2.com/file/5CCB361F44CCC7256132405D31E3A24DACCF440A/156632.png',
-            Warrior: 'https://render.guildwars2.com/file/0A97E13F29B3597A447EEC04A09BE5BD699A2250/156643.png',
-            Guardian: 'https://render.guildwars2.com/file/C32BE61FC55C962524624F643897ECF1A9C80462/156634.png',
-            Revenant: 'https://render.guildwars2.com/file/7C9309BE7A2A48C6A9FBCC70CC1EBEBFD7593C05/961390.png',
         },
         displayHalp: {
             all: false,
@@ -746,8 +17,8 @@ const mainComp = new Vue({
             usage: false,
         },
         hideCompleted: false,
-        hideSubEighty:false, 
-        loaded:false,
+        hideSubEighty: false,
+        loaded: false,
         pickingStat: {
             picking: false,
             char: {
@@ -758,13 +29,22 @@ const mainComp = new Vue({
             specific: false,
             statCategory: 'Power',
             specificStat: `Berserker's`
-        }
+        },
+        getTrinketStuff: {
+            active: false,
+            slot: 'Backpack',
+            stat: 'Power',
+            char:'Bob',
+            gender:'Female',
+            oldStat:'ERROR',
+            options: []//array of options for this trinket
+        },
     },
     methods: {
         getApiKey: function () {
-            console.log('storage', storage)
+            console.log('storage', storage, storage.getStore, storage.getStore('gw2trink'))
             // console.log(storage)
-            let usrData = storage.get('gw2trink'),
+            let usrData = storage.getStore('gw2trink'),
                 self = this;
             if (usrData && typeof usrData == 'string') {
                 usrData = JSON.parse(usrData)
@@ -812,10 +92,10 @@ const mainComp = new Vue({
                 val = JSON.stringify({
                     key: key,
                     chars: theDoods,
-                    hsm:false,
-                    thc:false
+                    hsm: false,
+                    thc: false
                 })
-            storage.set('gw2trink', val, true)
+            storage.setStore('gw2trink', val, true)
             // console.log('cookies now', storage.keys())
             this.getTrinkets(key, theDoods)
         },
@@ -827,10 +107,10 @@ const mainComp = new Vue({
                 chars: self.allChars.map(q => {
                     return { name: q.name, desiredStat: q.desiredStat }
                 }),
-                hsm:self.hideSubEighty,
-                thc:self.hideCompleted
+                hsm: self.hideSubEighty,
+                thc: self.hideCompleted
             })
-            storage.set('gw2trink', val, true)
+            storage.setStore('gw2trink', val, true)
         },
         getTrinkets: function (k, u) {
             console.log('getting trinkets for characters', u, 'of account', k)
@@ -843,18 +123,55 @@ const mainComp = new Vue({
                 //NOTE: should PROBLY have some sort of method, via traits, to detect which specialization this uses.
                 self.allChars = r.map(ru => {
                     console.log('CHAR', ru.body.name, 'DATA', ru.body)
-                    let theProf = ru.body.profession, profPic = self.nonEliteIcons[ru.body.profession];
+                    let theProf = ru.body.profession, profPic = data.nonEliteIcons[ru.body.profession];
                     ru.body.specializations.pve.forEach(ps => {
-                        if (ps && self.eliteSpecIds[ps.id]) {
-                            theProf = self.eliteSpecIds[ps.id].name;
-                            profPic = self.eliteSpecIds[ps.id].icon;
+                        if (ps && data.eliteSpecIds[ps.id]) {
+                            theProf = data.eliteSpecIds[ps.id].name;
+                            profPic = data.eliteSpecIds[ps.id].icon;
                         }
                     })
-                    return { name: ru.body.name, level:ru.body.level, gender: ru.body.gender, race: ru.body.race, prof: theProf, profPic: profPic, generalProf: ru.body.profession, equip: ru.body.equipment.filter(q => !!self.slots.includes(q.slot)), desiredStat: u.find(p => p.name == ru.body.name).desiredStat }
+                    return { name: ru.body.name, level: ru.body.level, gender: ru.body.gender, race: ru.body.race, prof: theProf, profPic: profPic, generalProf: ru.body.profession, equip: ru.body.equipment.filter(q => !!self.slots.includes(q.slot)), desiredStat: u.find(p => p.name == ru.body.name).desiredStat, bags: ru.body.bags }
                 });
                 //we got all trinkets for this user. We now need to check all trinkets for attributes, as non-stat-selectable-items do not have viewable stats
                 self.checkAttribs();
+                self.sumAllCurrencies();
             })
+        },
+        sumAllCurrencies: function () {
+            const self = this;
+            self.$http.get('https://api.guildwars2.com/v2/account/wallet?access_token=B9DE7B9E-9DAD-2C40-BECD-12F9BA931FE0851EA3EB-B1AA-4FBB-B4BE-CCDD28F51644').then(wlts => {
+                //wallet and
+                self.$http.get('https://api.guildwars2.com/v2/account/materials?access_token=B9DE7B9E-9DAD-2C40-BECD-12F9BA931FE0851EA3EB-B1AA-4FBB-B4BE-CCDD28F51644').then(mats => {
+                    //mats!
+                    data.collectableCurrencies.forEach(cr => {
+                        self.allChars.forEach(ch => {
+                            // console.log('CUrrency',cr.name,'Char',ch.name,'bags?',!!ch.bags)
+                            ch.bags.forEach(bg => {
+                                //now we have a single bag, on a single char, looking for a single currency
+                                if (!bg || !bg.inventory) {
+                                    return false;
+                                }
+                                // console.log(ch.name,'BAG',bg)
+                                let theCurrency = bg.inventory.find(it => {
+                                    // console.log('CHECKING BAG',it,cr)
+                                    return !!it && it.id == cr.id
+                                });
+                                if (theCurrency) {
+                                    cr.amount += theCurrency.count;
+                                }
+                            })
+                        })
+                        cr.amount += mats.body.find(ac => ac.id == cr.id).count;
+                    });
+                    //got all collectable currencies on chars and on account
+                    //now just wallet currencies
+                    data.walletCurrencies.forEach(wc => {
+                        wc.amount += wlts.body.find(wlc => wlc.id == wc.id).value;
+                    });
+                    console.log('CURRENCIES', data.walletCurrencies, data.collectableCurrencies)
+                });
+            });
+            // console.log('CURRENCIES!',self.collectableCurrencies)
         },
         checkAttribs: function () {
             const needsCheck = [],
@@ -870,7 +187,7 @@ const mainComp = new Vue({
                             slot: che.slot
                         })
                     }
-                    if(che.infusions && che.infusions.length){
+                    if (che.infusions && che.infusions.length) {
                         allIds.push(...che.infusions)
                     }
                     allIds.push(che.id);
@@ -907,14 +224,18 @@ const mainComp = new Vue({
                         } else {
                             // console.log(chde)
                             chde.stats.rarity = yourItem && yourItem.rarity;
-                            console.log('RAN THE ELSE FOR',chde)
+                            console.log('RAN THE ELSE FOR', chde)
                             chde.stats.theItem = 'Unknown';
                         }
+                        //fix for Armbrace of Truth until ANet fixes their API :P
+                        if (chde.id == 39241) {
+                            chde.stats.rarity = 'Ascended';
+                        }
                         chde.stats.theItem = self.getStatCombo(chde.stats.attributes);
-                        if(chde.infusions && chde.infusions.length){
-                            chde.infusions = chde.infusions.map(chdef=>{
-                                let tin = ur.body.find(q=>q.id==chdef),
-                                hazAr = tin.details.infix_upgrade.attributes.find(q=>q.attribute=='AgonyResistance');
+                        if (chde.infusions && chde.infusions.length) {
+                            chde.infusions = chde.infusions.map(chdef => {
+                                let tin = ur.body.find(q => q.id == chdef),
+                                    hazAr = tin.details.infix_upgrade.attributes.find(q => q.attribute == 'AgonyResistance');
 
                                 return {
                                     plusAgony: hazAr && hazAr.modifier
@@ -922,11 +243,11 @@ const mainComp = new Vue({
                             })
                         }
                         //finally, give us a name and a piksher
-                        if(!!yourItem){
-                            chde.name=yourItem.name;
-                            chde.icon=yourItem.icon;
+                        if (!!yourItem) {
+                            chde.name = yourItem.name;
+                            chde.icon = yourItem.icon;
                         }
-                        
+
                         return chde;
                     }).filter(af => !!af).sort((a, b) => {
                         if (a.slot > b.slot) {
@@ -936,14 +257,14 @@ const mainComp = new Vue({
                         }
                         return 0;
                     });
-                    
+
                     chd.equip = this.fillEmpty(chd.equip);//fill empty trinket slots with a blank label so table doesnt break 
                     console.log('THIS CHAR', chd.name, 'NOW', JSON.stringify(chd))
                     return chd;
                 });
                 console.log('Should now have equipment for all chars', self.allChars)
             });
-            this.loaded=true;
+            this.loaded = true;
         },
         fillEmpty: function (e) {
             e = this.slots.map(sl => {
@@ -958,11 +279,14 @@ const mainComp = new Vue({
             })
             return e;
         },
-        sum:function(it){
+        sum: function (it) {
+            if (!it || !it.length) {
+                return 0;
+            }
             let allAgony = 0;
-            it.forEach(n=>{
-                if(n.plusAgony && !isNaN(n.plusAgony)){
-                    allAgony+=n.plusAgony;
+            it.forEach(n => {
+                if (n.plusAgony && !isNaN(n.plusAgony)) {
+                    allAgony += n.plusAgony;
                 }
             })
             return allAgony
@@ -978,7 +302,7 @@ const mainComp = new Vue({
             let bigVals = atNames.filter(ab => a[ab] == maxVal),
                 smallVals = atNames.filter(as => a[as] < maxVal && a[as] != maxVal);
             // console.log('Getting items for stats', a, 'returns bigVals of', bigVals, 'and smallVals of', smallVals)
-            let finalCombo = this.statCombos.find(q => {
+            let finalCombo = data.statCombos.find(q => {
                 //return where the primary attribs are equal to the ones in this attrib, and where the minor attributes either dont exist (for 1-attrib combos) OR the minor attrib is also equal
                 return _.isEqual(q.maxVals.sort(), bigVals.sort()) && (!smallVals.length || _.isEqual(q.minVals.sort(), smallVals.sort()))
             });
@@ -993,7 +317,14 @@ const mainComp = new Vue({
         },
         getFinished: function (char) {
             // let ds = char.desiredStat;
-            return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && eq.stats.isExotic)).length;//no remaining "Not Recommended" items
+            if (char.name == 'Portable Boo Unit') {
+                console.log('BOO IS', char)
+                char.equip.forEach(ec => {
+                    console.log('ITEM:', ec.name, ec.stats)
+                    console.log(ec.stats && ec.stats.theItem && ec.stats.theItem.type, char.desiredStat, ec.stats && ec.stats.rarity)
+                })
+            }
+            return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && (eq.stats.rarity != 'Ascended' && eq.stats.rarity != 'Legendary'))).length;//no remaining "Not Recommended" items
         },
         changeSort: function (c) {
             if (this.sortStuff.col == c) {
@@ -1006,17 +337,17 @@ const mainComp = new Vue({
         removeUser: function () {
             bulmabox.confirm("Remove API Key", `Are you sure you wish to remove this API key?`, (r) => {
                 if (r && r !== null) {
-                    storage.delete('gw2trink');
+                    storage.deleteStore('gw2trink');
                     window.location.reload();
                 }
             })
         },
         showPickStat: function (c) {
-            let maybeSpefStat = this.statCombos.find(q => q.name == c.desiredStat);
+            let maybeSpefStat = data.statCombos.find(q => q.name == c.desiredStat);
             this.pickingStat.picking = true;
             this.pickingStat.char = c;
             this.pickingStat.statCategory = maybeSpefStat ? maybeSpefStat.type : c.desiredStat;//if user picked a specific stat, category should be that stat's type. otherwise, it'll be the stat they picked (specific)
-            this.pickingStat.specificStat = maybeSpefStat ? maybeSpefStat : this.statCombos.find(q => q.name == "Berserker's")
+            this.pickingStat.specificStat = maybeSpefStat ? maybeSpefStat : data.statCombos.find(q => q.name == "Berserker's")
             //NEEDS: stuff for picking either just statCategory (if general) or statCategory and specificStat (if... specific)
         },
         doPickStat: function () {
@@ -1032,15 +363,62 @@ const mainComp = new Vue({
             self.setDesired();
         },
         isSpef: function (c) {
-            // console.log('Specific Stat Boolean thinger',this.statCombos.find(q))
-            return !!this.statCombos.find(q => q.name == c)
+            // console.log('Specific Stat Boolean thinger',data.statCombos.find(q))
+            return !!data.statCombos.find(q => q.name == c)
         },
-        spaceless:function(t){
-            return t.replace(' ','-')
+        spaceless: function (t) {
+            return t.replace(' ', '-')
+        },
+        trinketGet: function (c,e) {
+            const cats = _.uniqBy(data.statCombos,'type').map(q=>q.type),
+            theSlot = e.slot.replace('1','').replace('2','');//categories
+            let isCat = !!cats.includes(c.desiredStat),
+            statOpts = [],
+            core=false,
+            pof=false,
+            hot=false; 
+            console.log(`Character ${c.name} wants a trinket for ${e.slot} with ${c.desiredStat} stats! Category?${isCat}. Old item?${JSON.stringify(e)}`);
+            if(isCat){
+                //category, so can use multiple options
+                statOpts =data.statCombos.filter(sc=>sc.type==c.desiredStat).map(q=>q.name.replace("'s",''));
+            }else{
+                statOpts = [c.desiredStat.replace("'s",'')];//only one, since this is a specific stat.
+            }
+            core = !!statOpts.filter(cs=>data.coreStats.includes(cs)).length;
+            hot = !!statOpts.filter(hs=>data.hotStats.includes(hs)).length;
+            pof = !!statOpts.filter(ps=>data.pofStats.includes(ps)).length;
+            // console.log('Checked if this exists in each "game": core',core,', hot:',hot,', pof:',pof,'\nStat Opts are',statOpts,'\nCats',cats)
+            const opts = data.trinketOptions[theSlot].filter(ot=>{
+                return (ot.stats.includes('pof') && pof) || (ot.stats.includes('core') && core) || (ot.stats.includes('hot') && hot)
+            });//the options for this trinket
+            // console.log(`Options are: ${opts.map(a=>a.loc+" "+theSlot)}`)
+            //so we should now have a list of trinkets that are "available" for our chosen slot and stat.
+            //now let's get the total remaining cost of each option!
+            this.getTrinketStuff.options = opts.map(o=>{
+                let mainCost = data.collectableCurrencies.find(cc=>cc.id==o.cur),
+                secondCost = data.walletCurrencies.find(wc=>wc.id==o.secondCur);
+                // console.log('Main Cost',mainCost,'secondary cost',secondCost)
+                o.cost = Math.max(o.cost - mainCost.amount,0);
+                o.costName = mainCost.name;
+                o.secondCost = Math.max(o.secondCost - secondCost.amount,0);
+                o.secondCostName = secondCost.name;
+                return o;
+            });
+            this.getTrinketStuff.active = true;
+            this.getTrinketStuff.gender = c.gender;
+            this.getTrinketStuff.slot = theSlot;
+            this.getTrinketStuff.stat = c.desiredStat;
+            this.getTrinketStuff.oldStat = e.stats && e.stats.theItem && !e.noTrink?`${e.stats.theItem.name} (${e.stats.theItem.type})`:false;
+            this.getTrinketStuff.char = c.name 
+            // console.log('Options with Costs:',optsWithCost)
+        },
+        aAn:function(s){
+           return ['a','e','i','o','u'].includes(s[0].toLowerCase())?'an':'a';
         }
     },
     created: function () {
-        this.loaded=false;
+        console.log('THING IS',data||'UNKNOWN')
+        this.loaded = false;
         this.getApiKey();
         this.$http.get('https://api.guildwars2.com/v2/specializations/' + Math.ceil(Math.random() * 63)).then(q => {
             console.log('BG IMG RESP', q)
@@ -1051,7 +429,7 @@ const mainComp = new Vue({
         userList: function () {
             const self = this;
             return self.allChars.sort((a, b) => {
-                let baseRev = 0;
+                let baseRef = 0;
                 if (a[self.sortStuff.col] > b[self.sortStuff.col]) {
                     baseRef = 1;
                 } else if (a[self.sortStuff.col] < b[self.sortStuff.col]) {
@@ -1066,7 +444,7 @@ const mainComp = new Vue({
         },
         specifStatList: function () {
             const self = this;
-            return self.statCombos.filter(q => self.pickingStat.statCategory=='All' || q.type == self.pickingStat.statCategory);
+            return data.statCombos.filter(q => self.pickingStat.statCategory == 'All' || q.type == self.pickingStat.statCategory);
         },
         statInfo: function () {
             const self = this,
@@ -1097,19 +475,19 @@ const mainComp = new Vue({
                 let major = self.pickingStat.specificStat.maxVals.map(q => statTrans(q)).join(', '),
                     minor = self.pickingStat.specificStat.minVals.map(q => statTrans(q)).join(', '),
                     fullStr = `Major: ${major}`;
-                if(minor){
-                    fullStr +=`| Minor: ${minor}`
+                if (minor) {
+                    fullStr += `| Minor: ${minor}`
                 }
                 return fullStr;
             }
         },
-        numHidden:function(){
-            let num = 0, self=this;
-            if(self.hideCompleted){
-                num+= self.userList.filter(q=>!!self.getFinished(q)).length;
+        numHidden: function () {
+            let num = 0, self = this;
+            if (self.hideCompleted) {
+                num += self.userList.filter(q => !!self.getFinished(q)).length;
             }
-            if(self.hideSubEighty){
-                num+= self.userList.filter(a=>a.level<80).length;
+            if (self.hideSubEighty) {
+                num += self.userList.filter(a => a.level < 80).length;
             }
             return num;
         }

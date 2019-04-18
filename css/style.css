@@ -77,7 +77,7 @@ tr{
     width:80%;
 }
 .no-show-row{
-    display:none;
+    display:none!important;
 }
 .item-icon{
     max-width: 30px;
@@ -108,4 +108,33 @@ tr{
 }
 .rare-border-Legendary{
     border:2px solid #4C139D;
+}
+
+.is-8-perc{
+    width:8%;
+    flex:none;
+}
+.smolpad{
+    padding:0px;
+    padding-right:2px;
+}
+.bottom-border{
+    border-bottom:1px solid #999;
+}
+.columns-simple{
+    display:flex;
+}
+.wiggle-hand:hover::before{
+    content:'\f0a6';
+}
+.wiggle-col:hover{
+    background:#999;
+}
+.wiggle-col{
+    transition-duration: .25s;
+    cursor:pointer;
+}
+.button.is-tiny{
+    border-radius:2px;
+    font-size:0.55rem;
 }

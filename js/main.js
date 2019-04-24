@@ -4,6 +4,7 @@ const mainComp = new Vue({
     el: '#main',
     data: {
         allChars: [],
+        searchTerms:null,
         slots: ['Accessory1', 'Accessory2', 'Backpack', 'Ring1', 'Ring2', 'Amulet'].sort(),
         apiKey: null,
         panelBg: '#333',
@@ -32,6 +33,8 @@ const mainComp = new Vue({
         },
         getTrinketStuff: {
             active: false,
+            showWallet:false,
+            showCollectable:false,
             slot: 'Backpack',
             stat: 'Power',
             char:'Bob',
@@ -398,19 +401,24 @@ const mainComp = new Vue({
                 let mainCost = data.collectableCurrencies.find(cc=>cc.id==o.cur),
                 secondCost = data.walletCurrencies.find(wc=>wc.id==o.secondCur);
                 // console.log('Main Cost',mainCost,'secondary cost',secondCost)
-                o.cost = Math.max(o.cost - mainCost.amount,0);
-                o.costName = mainCost.name;
-                o.secondCost = Math.max(o.secondCost - secondCost.amount,0);
-                o.secondCostName = secondCost.name;
-                return o;
+                let oc = _.cloneDeep(o);
+                oc.firstCost = Math.max(o.cost - mainCost.amount,0);
+                oc.fullCostOne=o.cost;
+                oc.costName = mainCost.name;
+                oc.fullCostTwo = o.secondCost;
+                oc.secondCost = Math.max(o.secondCost - secondCost.amount,0);
+                oc.secondCostName = secondCost.name;
+                return oc;
             });
+            this.getTrinketStuff.wc = _.cloneDeep(data.walletCurrencies);
+            this.getTrinketStuff.cc = _.cloneDeep(data.collectableCurrencies);
             this.getTrinketStuff.active = true;
             this.getTrinketStuff.gender = c.gender;
             this.getTrinketStuff.slot = theSlot;
             this.getTrinketStuff.stat = c.desiredStat;
             this.getTrinketStuff.oldStat = e.stats && e.stats.theItem && !e.noTrink?`${e.stats.theItem.name} (${e.stats.theItem.type})`:false;
             this.getTrinketStuff.char = c.name 
-            // console.log('Options with Costs:',optsWithCost)
+            console.log('Options with Costs:',JSON.stringify(this.getTrinketStuff),JSON.stringify(data.walletCurrencies),JSON.stringify(data.collectableCurrencies))
         },
         aAn:function(s){
            return ['a','e','i','o','u'].includes(s[0].toLowerCase())?'an':'a';
@@ -426,9 +434,9 @@ const mainComp = new Vue({
         })
     },
     computed: {
-        userList: function () {
+        userListFiltered:function(){
             const self = this;
-            return self.allChars.sort((a, b) => {
+            let usrList = self.allChars.sort((a, b) => {
                 let baseRef = 0;
                 if (a[self.sortStuff.col] > b[self.sortStuff.col]) {
                     baseRef = 1;
@@ -441,7 +449,36 @@ const mainComp = new Vue({
                 //all about that baseref
                 return baseRef;
             })
+            if(!self.searchTerms){
+                return usrList;
+            }
+            let listOTerms = self.searchTerms.split(',').map(t=>t.trim()).filter(f=>!!f && f.length);
+            if(!listOTerms.length){
+                return usrList;
+            }
+            return usrList.filter(q=>{
+                return listOTerms.filter(st=>{
+                    // console.log('Looking at char',q.name,'terms',st)
+                    return !!q.name.toLowerCase().includes(st.toLowerCase());
+                }).length;
+            })
         },
+        // userList: function () {
+        //     const self = this;
+        //     return self.allChars.sort((a, b) => {
+        //         let baseRef = 0;
+        //         if (a[self.sortStuff.col] > b[self.sortStuff.col]) {
+        //             baseRef = 1;
+        //         } else if (a[self.sortStuff.col] < b[self.sortStuff.col]) {
+        //             baseRef = -1;
+        //         }
+        //         if (self.sortStuff.reverse) {
+        //             baseRef *= -1;
+        //         }
+        //         //all about that baseref
+        //         return baseRef;
+        //     })
+        // },
         specifStatList: function () {
             const self = this;
             return data.statCombos.filter(q => self.pickingStat.statCategory == 'All' || q.type == self.pickingStat.statCategory);

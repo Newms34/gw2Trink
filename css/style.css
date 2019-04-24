@@ -124,17 +124,12 @@ tr{
 .columns-simple{
     display:flex;
 }
-.wiggle-hand:hover::before{
-    content:'\f0a6';
-}
-.wiggle-col:hover{
-    background:#999;
-}
-.wiggle-col{
-    transition-duration: .25s;
-    cursor:pointer;
-}
-.button.is-tiny{
+.is-tiny{
     border-radius:2px;
     font-size:0.55rem;
+}
+.is-one-quarter-with-border{
+    width:24%;
+    flex:none;
+    margin-right:1%;
 }

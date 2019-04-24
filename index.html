@@ -44,93 +44,10 @@
                             Check to hide characters that are not level 80</label>
                     </div>
                     <div class="column is-full">Hidden Characters: {{numHidden}}</div>
+                    <div class="column is-one-fifth">Filter: </div>
+                    <div class="column is-three-fifths"><input type="text" class="input" placeholder='Enter search terms, separated by commas.' v-model='searchTerms'></div>
                 </div>
-                <!-- <div class="container has-background-white is-fullwidth" style='padding:4px;'>
-                    <div class="columns bottom-border">
-                        <div v-on:click='changeSort("name")'
-                            class='is-8-perc has-text-weight-bold is-size-6 column sortable-col'>
-                            Name <span v-if='sortStuff.col=="name" && sortStuff.reverse'>&#9650;</span><span
-                                v-if='sortStuff.col=="name" && !sortStuff.reverse'>&#9660;</span></div>
-                        <div v-on:click='changeSort("gender")'
-                            class='is-8-perc has-text-weight-bold is-size-6 column sortable-col'>Gender <span
-                                v-if='sortStuff.col=="gender" && sortStuff.reverse'>&#9650;</span><span
-                                v-if='sortStuff.col=="gender" && !sortStuff.reverse'>&#9660;</span></div>
-                        <div v-on:click='changeSort("race")'
-                            class='is-8-perc has-text-weight-bold is-size-6 column sortable-col'>
-                            Race <span v-if='sortStuff.col=="race" && sortStuff.reverse'>&#9650;</span><span
-                                v-if='sortStuff.col=="race" && !sortStuff.reverse'>&#9660;</span></div>
-                        <div v-on:click='changeSort("prof")'
-                            class='is-8-perc has-text-weight-bold is-size-6 column sortable-col'>
-                            Profession <span v-if='sortStuff.col=="prof" && sortStuff.reverse'>&#9650;</span><span
-                                v-if='sortStuff.col=="prof" && !sortStuff.reverse'>&#9660;</span></div>
-                        <div class='is-8-perc has-text-weight-bold is-size-6 column'>Desired Stat</div>
-                        <div class="column is-three-fifths">
-                            <div class="columns is-fullwidth">
-                                <div v-for='s in slots' class='has-text-weight-bold is-size-6 column'>{{s}}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='is-fullwidth columns bottom-border' v-for='ch in userList'
-                        v-bind:class='{"transp":getFinished(ch) && hideCompleted, "no-show-row":(getFinished(ch) && hideCompleted)||(ch.level<80 && hideSubEighty)}'>
-                        <div class='column is-8-perc'>{{ch.name}} <i class="fa fa-arrow-down is-size-6"
-                                v-bind:title='ch.name+" is not level 80! "+(ch.gender=="Female"?"She":"He")+" cannot equip ascended trinkets."'
-                                v-if='ch.level<80'></i></div>
-                        <div class='column is-8-perc'>{{ch.gender}}</div>
-                        <div class='column is-8-perc'>{{ch.race}}</div>
-                        <div class='column is-8-perc'><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}}
-                            <span v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></div>
-                        <div class='column is-8-perc'>
-                            <span class='is-size-7'><i class="fa fa-database" v-if='!isSpef(ch.desiredStat)'
-                                    title='This is a general stat'></i><i class="fa fa-crosshairs"
-                                    v-if='isSpef(ch.desiredStat)'
-                                    title='This is a specific stat'></i>&nbsp;{{ch.desiredStat}}</span>
-                            <button class="button is-dark is-small" v-on:click='showPickStat(ch)'><i
-                                    class="fa fa-bar-chart"></i>Pick Stat</button>
-                        </div>
-                        <div class="column is-three-fifths">
-                            <div class="columns is-fullwidth">
-                                <div class='column smolpad' v-for='ei in ch.equip' style='width:16.666667%!important;'>
-                                    <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth'
-                                        v-bind:class="'has-background-'+spaceless(ei.stats.theItem.type)+' rare-border-'+ei.stats.rarity"
-                                        v-bind:title='getItemReport(ch.name,ei)'>
-                                        <div class="is-fullwidth columns" style='width:100%;overflow:hidden'>
-                                            <div class='column is-one-quarter'><i class="fa fa-check"
-                                                    v-if='ch.desiredStat && ei.stats.theItem.type==ch.desiredStat'
-                                                    title='This is a correct stat option for this character'></i><i
-                                                    class="fa fa-times"
-                                                    v-if='ch.desiredStat && ei.stats.theItem.type!=ch.desiredStat'
-                                                    title='This is an incorrect stat option for this character'></i>
-                                            </div>
-                                            <div class='column is-one-quarter'><i
-                                                    v-if='ei.stats.rarity && ei.stats.rarity!="Ascended" && ei.stats.rarity!="Legendary"'
-                                                    title='Warning: This item is not ascended or legendary!'
-                                                    class="fa fa-arrow-down is-size-7"></i></div>
-                                            <div class='column is-one-quarter'
-                                                title="This trinket's agony resistance">
-                                                <i class="fa fa-cog is-size-7"></i> {{sum(ei.infusions)}}
-                                            </div>
-                                            <div class='column is-one-quarter'>
-                                                <i class="fa fa-hand-point-right"></i>
-                                            </div>
-                                        </div>
-                                        <div class="is-size-8 is-fullwidth">
-                                            {{ei.stats.theItem.type}} ({{ei.stats.theItem.name}})
-                                        </div>
-                                        <div class="">
-                                            <div class="is-size-7">{{ei.name}}</div>
-                                            <img v-bind:src="ei.icon" v-bind:alt="ei.name+' icon'">
-                                        </div>
-                                    </div>
-                                    <div v-if="!ei.stats || !ei.stats.theItem||ei.noTrink"
-                                        title="This trinket couldn't be found! It's probably not my fault."
-                                        class='is-fullwidth'>
-                                        No Trinket!
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                
                 <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
                     <thead>
                         <tr>
@@ -156,7 +73,7 @@
                                 loading...
                             </td>
                         </tr>
-                        <tr v-for='ch in userList'
+                        <tr v-for='ch in userListFiltered'
                             v-bind:class='{"transp":getFinished(ch) && hideCompleted, "no-show-row":(getFinished(ch) && hideCompleted)||(ch.level<80 && hideSubEighty)}'>
                             <td>{{ch.name}} <i class="fa fa-arrow-down is-size-6"
                                     v-bind:title='ch.name+" is not level 80! "+(ch.gender=="Female"?"She":"He")+" cannot equip ascended trinkets."'
@@ -179,15 +96,16 @@
                                         <div class='column smolpad'><i
                                                 v-if='ei.stats.rarity && ei.stats.rarity!="Ascended" && ei.stats.rarity!="Legendary"'
                                                 title='Warning: This item is not ascended or legendary!'
-                                                class="fa fa-arrow-down is-size-7"></i></div>
+                                                class="fa fa-arrow-down is-size-7 tag is-tiny is-danger"></i></div>
                                         <div class='column smolpad' class="is-size-7"
                                             title="This trinket's agony resistance">
                                             <i class="fa fa-cog"></i> {{sum(ei.infusions)}}
                                         </div>
-                                        <div class="column smolpad" v-bind:title='"Replace "+ei.slot+" trinket for "+ch.name+"."'>
+                                        <div class="column smolpad"
+                                            v-bind:title='"Replace "+ei.slot+" trinket for "+ch.name+"."'>
                                             <button class="button is-info is-tiny is-pulled-right"
-                                        v-on:click='trinketGet(ch,ei);'><i
-                                            class="fa fa-hand-point-right"></i></button>
+                                                v-on:click='trinketGet(ch,ei);'><i
+                                                    class="fa fa-hand-point-right"></i></button>
                                             <!-- <i class="far fa-hand-point-right wiggle-hand" aria-hidden="true"></i> -->
                                         </div>
                                     </div>
@@ -403,6 +321,36 @@
                                 {{getTrinketStuff.oldStat}}.
                             </div>
                         </div>
+                        <br>
+                        <div class="is-fullwidth notification">
+                            <div class="is-fullwidth columns is-multiline">
+                                <div class="column has-text-weight-bold is-full">Collectable Currencies<button
+                                        class="button is-small is-info is-pulled-right"
+                                        v-on:click='getTrinketStuff.showCollectable = !getTrinketStuff.showCollectable'><i
+                                            class="fa fa-eye"></i></button></div>
+                                <div class="column is-one-quarter-with-border notification has-text-white has-background-grey-darker"
+                                    v-for='cc in getTrinketStuff.cc' v-if='getTrinketStuff.showCollectable'>
+                                    {{cc.name}} <br>
+                                    <img class='item-icon' v-bind:src="cc.icon"> <br>
+                                    <div class="tag is-light" v-bind:title='"You have "+cc.amount+" "+cc.name+"(s)."'>
+                                        {{cc.amount}}</div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="is-fullwidth columns is-multiline">
+                                <div class="column has-text-weight-bold is-full">Wallet Currencies<button
+                                        class="button is-small is-info is-pulled-right"
+                                        v-on:click='getTrinketStuff.showWallet=!getTrinketStuff.showWallet'><i
+                                            class="fa fa-eye"></i></button></div>
+                                <div class="column is-one-quarter-with-border notification has-text-white has-background-grey-darker"
+                                    v-for='wc in getTrinketStuff.wc' v-if='getTrinketStuff.showWallet'>
+                                    {{wc.name}} <br>
+                                    <img class='item-icon' v-bind:src="wc.icon"> <br>
+                                    <div class="tag is-light" v-bind:title='"You have "+wc.amount+" "+wc.name+"(s)."'>
+                                        {{wc.amount}}</div>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table" style='table-layout:fixed;'>
                             <thead>
                                 <tr>
@@ -414,8 +362,8 @@
                             <tbody>
                                 <tr v-for='tro in getTrinketStuff.options'>
                                     <td>{{tro.loc}}</td>
-                                    <td>{{tro.cost}} {{tro.costName}}</td>
-                                    <td>{{tro.secondCost}} {{tro.secondCostName}}</td>
+                                    <td>{{tro.fullCostOne}} {{tro.costName}} (You need {{tro.firstCost}} more)</td>
+                                    <td>{{tro.fullCostTwo}} {{tro.secondCostName}} (You need {{tro.secondCost}} more)</td>
                                 </tr>
                                 <tr v-if='!getTrinketStuff.options.length'>
                                     <td class="has-text-center" colspan="3">

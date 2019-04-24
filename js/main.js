@@ -521,10 +521,10 @@ const mainComp = new Vue({
         numHidden: function () {
             let num = 0, self = this;
             if (self.hideCompleted) {
-                num += self.userList.filter(q => !!self.getFinished(q)).length;
+                num += self.userListFiltered.filter(q => !!self.getFinished(q)).length;
             }
             if (self.hideSubEighty) {
-                num += self.userList.filter(a => a.level < 80).length;
+                num += self.userListFiltered.filter(a => a.level < 80).length;
             }
             return num;
         }

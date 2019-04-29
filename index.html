@@ -48,7 +48,6 @@
                     <div class="column is-three-fifths"><input type="text" class="input"
                             placeholder='Enter search terms, separated by commas.' v-model='searchTerms'></div>
                 </div>
-
                 <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
                     <thead>
                         <tr>
@@ -139,6 +138,11 @@
                                         title='This is a specific stat'></i>&nbsp;{{ch.desiredStat}}</span>
                                 <button class="button is-dark is-small" v-on:click='showPickStat(ch)'><i
                                         class="fa fa-bar-chart"></i>Pick Stat</button>
+                            </td>
+                        </tr>
+                        <tr v-if='loaded && userListFiltered.length==numHidden'>
+                            <td class="has-text-centered is-size-4 has-text-weight-bold" colspan='11'>
+                                All done! (...or we couldn't find any characters)
                             </td>
                         </tr>
                     </tbody>

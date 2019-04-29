@@ -45,9 +45,10 @@
                     </div>
                     <div class="column is-full">Hidden Characters: {{numHidden}}</div>
                     <div class="column is-one-fifth">Filter: </div>
-                    <div class="column is-three-fifths"><input type="text" class="input" placeholder='Enter search terms, separated by commas.' v-model='searchTerms'></div>
+                    <div class="column is-three-fifths"><input type="text" class="input"
+                            placeholder='Enter search terms, separated by commas.' v-model='searchTerms'></div>
                 </div>
-                
+
                 <table class="table is-fullwidth" style='table-layout:fixed;' v-if='!!allChars'>
                     <thead>
                         <tr>
@@ -82,11 +83,11 @@
                             <td>{{ch.race}}</td>
                             <td class='is-size-7'><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span
                                     v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
-                            <td v-for='ei in ch.equip' style='padding:0;'>
-                                <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth'
+                            <td v-for='ei in ch.equip' style=''>
+                                <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth has-text-centered'
                                     v-bind:class="'has-background-'+spaceless(ei.stats.theItem.type)+' rare-border-'+ei.stats.rarity"
                                     v-bind:title='getItemReport(ch.name,ei)'>
-                                    <div class="is-fullwidth columns-simple">
+                                    <!-- <div class="is-fullwidth columns-simple">
                                         <div class='column smolpad'><i class="fa fa-check"
                                                 v-if='ch.desiredStat && ei.stats.theItem.type==ch.desiredStat'
                                                 title='This is a correct stat option for this character'></i><i
@@ -106,15 +107,20 @@
                                             <button class="button is-info is-tiny is-pulled-right"
                                                 v-on:click='trinketGet(ch,ei);'><i
                                                     class="fa fa-hand-point-right"></i></button>
-                                            <!-- <i class="far fa-hand-point-right wiggle-hand" aria-hidden="true"></i> -->
                                         </div>
-                                    </div>
-                                    <div class="is-size-8 is-fullwidth">
+                                    </div> -->
+                                    <!-- <div class="is-size-8 is-fullwidth">
                                         {{ei.stats.theItem.type}} ({{ei.stats.theItem.name}})
-                                    </div>
+                                    </div> -->
                                     <div class="">
-                                        <div class="is-size-7">{{ei.name}}</div>
-                                        <img v-bind:src="ei.icon" v-bind:alt="ei.name+' icon'">
+                                        <div class="is-size-7 has-background-grey-lighter">{{ei.name||'(Unknown)'}}
+                                        </div>
+                                        <img v-bind:src="ei.icon||'./unknown.png'"
+                                            v-bind:alt="!!ei.name?ei.name+' icon':''">
+                                    </div>
+                                    <div class="is-fullwidth">
+                                        <button class="button is-dark is-small"
+                                            v-on:click='showManage(ch,ei);'>Manage</button>
                                     </div>
                                 </div>
                                 <div v-if="!ei.stats || !ei.stats.theItem||ei.noTrink"
@@ -300,7 +306,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal" v-bind:class='{"is-active":getTrinketStuff.active}'>
+        <div class="modal" v-bind:class='{"is-active":getTrinketStuff.active}' style='z-index:9999;'>
             <!-- the modal view-student-exercise window -->
             <div class="modal-background" v-on:click='getTrinketStuff.active=false'></div>
             <div class="modal-content" v-on:click.stop>
@@ -363,7 +369,8 @@
                                 <tr v-for='tro in getTrinketStuff.options'>
                                     <td>{{tro.loc}}</td>
                                     <td>{{tro.fullCostOne}} {{tro.costName}} (You need {{tro.firstCost}} more)</td>
-                                    <td>{{tro.fullCostTwo}} {{tro.secondCostName}} (You need {{tro.secondCost}} more)</td>
+                                    <td>{{tro.fullCostTwo}} {{tro.secondCostName}} (You need {{tro.secondCost}} more)
+                                    </td>
                                 </tr>
                                 <tr v-if='!getTrinketStuff.options.length'>
                                     <td class="has-text-center" colspan="3">
@@ -377,6 +384,90 @@
                 </div>
             </div>
         </div>
+        <div class="modal" v-bind:class='{"is-active":manage.active}'>
+            <!-- the modal view-student-exercise window -->
+            <div class="modal-background" v-on:click='manage.active=false'></div>
+            <div class="modal-content" v-on:click.stop>
+                <div class="panel">
+                    <div class="panel-heading has-background-grey-darker has-text-white is-size-4 has-text-weight-bold">
+                        {{manage.char.name}}'s {{manage.item.slot}} Information
+                        <button class="button is-danger is-small is-pulled-right"
+                            v-on:click='manage.active=false'>x</button>
+                    </div>
+                    <div class="panel-block has-background-white blocky content">
+                        <div class="is-fullwidth">&nbsp;</div>
+                        <div class="is-fullwidth columns is-multiline">
+                            <div class="column is-two-fifths notification">Name</div>
+                            <div class="column is-three-fifths">{{manage.item.name||'(Unknown)'}}
+                                <br>
+                                <img v-bind:src="manage.item.icon||'./unknown.png'"
+                                    v-bind:alt="!!manage.item.name?manage.item.name+' icon':''">
+                            </div>
+                            <!-- <div class="column is-full"></div> -->
+
+                            <div class="column is-two-fifths notification">Stats</div>
+                            <div class="column is-three-fifths" v-if='manage.item'>
+                                <div class="is-fullwidth">
+                                    {{!!manage.item && !!manage.item.stats?manage.item.stats.theItem.name:''}}
+                                    ({{!!manage.item && !!manage.item.stats?manage.item.stats.theItem.type:''}})
+                                </div>
+                                <div class="is-fullwidth">
+                                    <table class="table is-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th v-bind:colspan='manage.sb && manage.sb.length'>
+                                                    Major Attribute(s)
+                                                </th>
+                                                <th v-bind:colspan='manage.ss && manage.ss.length'>Minor Attribute(s)
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td v-for='big in manage.sb'>
+                                                    {{statTrans(big)}}
+                                                </td>
+                                                <td v-for='small in manage.ss'>
+                                                    {{statTrans(small)}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- <div class="column is-full"></div> -->
+
+                            <div class="column is-two-fifths notification">Information</div>
+                            <div class="column is-three-fifths">
+                                
+                                    <div class='is-fullwidth' v-if='manage.item && manage.char.desiredStat && manage.item.stats.theItem.type==manage.char.desiredStat'>
+                                        <i class="fa fa-check has-text-success"></i>&nbsp;This item has correct stats!
+                                    </div>
+                                    <div class="is-fullwidth" v-if='manage.item && manage.char.desiredStat && manage.item.stats.theItem.type!=manage.char.desiredStat'>
+                                        <i class="fa fa-times has-text-danger"></i>&nbsp;This item does not have correct stats!
+                                    </div>
+                                    <div class="is-fullwidth" v-if='manage.item && manage.item.infusions && manage.item.infusions.length'>
+                                        <i class="fa fa-cog"></i>&nbsp;+{{sum(manage.item.infusions)}} Agony Resistance
+                                    </div>
+                                    <div class="is-fullwidth" v-if='manage.item && manage.item.stats && manage.item.stats.rarity && manage.item.stats.rarity!="Ascended" && manage.item.stats.rarity!="Legendary"'>
+                                            <i class="fa fa-arrow-down has-text -danger"></i> This item is not Ascended or Legendary!
+                                    </div>
+                            </div>
+                            <!-- <div class="column is-full"></div> -->
+
+                            <div class="column is-two-fifths notification">Get New</div>
+                            <div class="column is-three-fifths">
+                                    <button class="button is-info is-large"
+                                    v-on:click='trinketGet(manage.char,manage.item);'><i
+                                        class="fa fa-plus"></i>&nbsp; New trinket options</button>
+                            </div>
+                            <!-- <div class="column is-full"></div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>

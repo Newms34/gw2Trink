@@ -42,6 +42,13 @@ const mainComp = new Vue({
             oldStat:'ERROR',
             options: []//array of options for this trinket
         },
+        manage:{
+            active:false,
+            item:{},
+            char:{},
+            sb:[],
+            ss:[]
+        }
     },
     methods: {
         getApiKey: function () {
@@ -422,6 +429,35 @@ const mainComp = new Vue({
         },
         aAn:function(s){
            return ['a','e','i','o','u'].includes(s[0].toLowerCase())?'an':'a';
+        },
+        statTrans:function(s) {
+            let out = s;
+            switch (s) {
+                case 'CritDamage':
+                    out = 'Ferocity';
+                    break;
+                case 'ConditionDamage':
+                    out = 'Condition Damage';
+                    break;
+                case 'BoonDuration':
+                    out = 'Concentration';
+                    break;
+                case 'ConditionDuration':
+                    out = 'Expertise';
+                    break;
+                default:
+                    break;
+            }
+            return out;
+        },
+        showManage: function(c,e){
+            let stat = data.statCombos.find(q=>q.name == e.stats.theItem.name);
+            this.manage.active = true;
+            this.manage.item = e;
+            this.manage.char = c;
+            this.manage.sb = stat.maxVals;
+            this.manage.ss = stat.minVals;
+            console.log('ITEM',e)
         }
     },
     created: function () {
@@ -485,32 +521,13 @@ const mainComp = new Vue({
         },
         statInfo: function () {
             const self = this,
-                correctCat = self.pickingStat.specificStat && self.pickingStat.specificStat.type && self.pickingStat.specificStat.type == self.pickingStat.statCategory,
-                statTrans = s => {
-                    let out = s;
-                    switch (s) {
-                        case 'CritDamage':
-                            out = 'Ferocity';
-                            break;
-                        case 'ConditionDamage':
-                            out = 'Condition Damage';
-                            break;
-                        case 'BoonDuration':
-                            out = 'Concentration';
-                            break;
-                        case 'ConditionDuration':
-                            out = 'Expertise';
-                            break;
-                        default:
-                            break;
-                    }
-                    return out;
-                };
+                correctCat = self.pickingStat.specificStat && self.pickingStat.specificStat.type && self.pickingStat.specificStat.type == self.pickingStat.statCategory;
+               
             if (!correctCat || !self.pickingStat.specific) {
                 return " ";
             } else {
-                let major = self.pickingStat.specificStat.maxVals.map(q => statTrans(q)).join(', '),
-                    minor = self.pickingStat.specificStat.minVals.map(q => statTrans(q)).join(', '),
+                let major = self.pickingStat.specificStat.maxVals.map(q => self.statTrans(q)).join(', '),
+                    minor = self.pickingStat.specificStat.minVals.map(q => self.statTrans(q)).join(', '),
                     fullStr = `Major: ${major}`;
                 if (minor) {
                     fullStr += `| Minor: ${minor}`

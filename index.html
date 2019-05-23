@@ -80,7 +80,7 @@
                                     v-if='ch.level<80'></i></td>
                             <td>{{ch.gender}}</td>
                             <td>{{ch.race}}</td>
-                            <td class='is-size-7'><img v-bind:src="ch.profPic" v-bind:alt="ch.prof">{{ch.prof}} <span
+                            <td class='is-size-7'><img v-bind:src="ch.profPic" v-if='ch.profPic'>{{ch.prof}} <span
                                     v-if='ch.prof!=ch.generalProf'>({{ch.generalProf}})</span></td>
                             <td v-for='ei in ch.equip' style=''>
                                 <div v-if='!!ei.stats && !!ei.stats.theItem' class='is-fullwidth has-text-centered'

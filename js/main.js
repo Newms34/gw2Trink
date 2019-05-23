@@ -68,12 +68,12 @@ const mainComp = new Vue({
                     } else {
                         self.$http.get(`https://api.guildwars2.com/v2/characters?access_token=${d}`)
                             .then(function (apiCheck) {
-                                console.log('GW2 api response wuz', apiCheck)
+                                // console.log('GW2 api response wuz', apiCheck)
                                 self.newUser(d, apiCheck.body);
                                 self.apiKey = d;
                             })
                             .catch(function (e) {
-                                console.log('e', e)
+                                // console.log('e', e)
                                 bulmabox.alert('Invalid API Key', `Sorry, but your API key doesn't seem to work. Try again!`, () => {
                                     self.getApiKey();
                                 })
@@ -207,7 +207,7 @@ const mainComp = new Vue({
             // const needsUniq = _.uniqBy(needsCheck, 'id').map(q => q.id).concat(_.uniq(infus))
             //example:13459
             self.$http.get('https://api.guildwars2.com/v2/items?ids=' + _.uniq(allIds).join(',')).then(ur => {
-                console.log('items response', ur);
+                // console.log('items response', ur);
                 self.allChars = self.allChars.map(chd => {
                     chd.equip = chd.equip.map(chde => {
                         if (!self.slots.includes(chde.slot)) {
@@ -234,7 +234,7 @@ const mainComp = new Vue({
                         } else {
                             // console.log(chde)
                             chde.stats.rarity = yourItem && yourItem.rarity;
-                            console.log('RAN THE ELSE FOR', chde)
+                            // console.log('RAN THE ELSE FOR', chde)
                             chde.stats.theItem = 'Unknown';
                         }
                         //fix for Armbrace of Truth until ANet fixes their API :P
@@ -269,10 +269,10 @@ const mainComp = new Vue({
                     });
 
                     chd.equip = this.fillEmpty(chd.equip);//fill empty trinket slots with a blank label so table doesnt break 
-                    console.log('THIS CHAR', chd.name, 'NOW', JSON.stringify(chd))
+                    // console.log('THIS CHAR', chd.name, 'NOW', JSON.stringify(chd))
                     return chd;
                 });
-                console.log('Should now have equipment for all chars', self.allChars)
+                // console.log('Should now have equipment for all chars', self.allChars)
             });
             this.loaded = true;
         },
@@ -328,10 +328,10 @@ const mainComp = new Vue({
         getFinished: function (char) {
             // let ds = char.desiredStat;
             if (char.name == 'Portable Boo Unit') {
-                console.log('BOO IS', char)
+                // console.log('BOO IS', char)
                 char.equip.forEach(ec => {
-                    console.log('ITEM:', ec.name, ec.stats)
-                    console.log(ec.stats && ec.stats.theItem && ec.stats.theItem.type, char.desiredStat, ec.stats && ec.stats.rarity)
+                    // console.log('ITEM:', ec.name, ec.stats)
+                    // console.log(ec.stats && ec.stats.theItem && ec.stats.theItem.type, char.desiredStat, ec.stats && ec.stats.rarity)
                 })
             }
             return !char.equip.filter(eq => (eq.stats && eq.stats.theItem && eq.stats.theItem.type != char.desiredStat) || (eq.stats && (eq.stats.rarity != 'Ascended' && eq.stats.rarity != 'Legendary'))).length;//no remaining "Not Recommended" items
@@ -387,7 +387,7 @@ const mainComp = new Vue({
             core=false,
             pof=false,
             hot=false; 
-            console.log(`Character ${c.name} wants a trinket for ${e.slot} with ${c.desiredStat} stats! Category?${isCat}. Old item?${JSON.stringify(e)}`);
+            // console.log(`Character ${c.name} wants a trinket for ${e.slot} with ${c.desiredStat} stats! Category?${isCat}. Old item?${JSON.stringify(e)}`);
             if(isCat){
                 //category, so can use multiple options
                 statOpts =data.statCombos.filter(sc=>sc.type==c.desiredStat).map(q=>q.name.replace("'s",''));
@@ -425,7 +425,7 @@ const mainComp = new Vue({
             this.getTrinketStuff.stat = c.desiredStat;
             this.getTrinketStuff.oldStat = e.stats && e.stats.theItem && !e.noTrink?`${e.stats.theItem.name} (${e.stats.theItem.type})`:false;
             this.getTrinketStuff.char = c.name 
-            console.log('Options with Costs:',JSON.stringify(this.getTrinketStuff),JSON.stringify(data.walletCurrencies),JSON.stringify(data.collectableCurrencies))
+            // console.log('Options with Costs:',JSON.stringify(this.getTrinketStuff),JSON.stringify(data.walletCurrencies),JSON.stringify(data.collectableCurrencies))
         },
         aAn:function(s){
            return ['a','e','i','o','u'].includes(s[0].toLowerCase())?'an':'a';
@@ -457,15 +457,15 @@ const mainComp = new Vue({
             this.manage.char = c;
             this.manage.sb = stat.maxVals;
             this.manage.ss = stat.minVals;
-            console.log('ITEM',e)
+            // console.log('ITEM',e)
         }
     },
     created: function () {
-        console.log('THING IS',data||'UNKNOWN')
+        // console.log('THING IS',data||'UNKNOWN')
         this.loaded = false;
         this.getApiKey();
         this.$http.get('https://api.guildwars2.com/v2/specializations/' + Math.ceil(Math.random() * 63)).then(q => {
-            console.log('BG IMG RESP', q)
+            // console.log('BG IMG RESP', q)
             this.panelBg = `url(${q.body.background})`
         })
     },
@@ -492,12 +492,14 @@ const mainComp = new Vue({
             if(!listOTerms.length){
                 return usrList;
             }
-            return usrList.filter(q=>{
+            let out = usrList.filter(q=>{
                 return listOTerms.filter(st=>{
                     // console.log('Looking at char',q.name,'terms',st)
                     return !!q.name.toLowerCase().includes(st.toLowerCase());
                 }).length;
-            })
+            });
+            console.log('out',out)
+            return out;
         },
         // userList: function () {
         //     const self = this;

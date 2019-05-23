@@ -751,7 +751,7 @@ export default {
             secondCost: 3000
         },{
             loc: 'Draconis Mons',
-            cur: 80332,
+            cur: 81127,
             stats: ['hot','core'],
             cost: 125,
             secondCur:32,
@@ -816,7 +816,7 @@ export default {
             secondCost: 2000
         },{
             loc: 'Draconis Mons',
-            cur: 80332,
+            cur: 81127,
             stats: ['hot','core'],
             cost: 100,
             secondCur:32,
